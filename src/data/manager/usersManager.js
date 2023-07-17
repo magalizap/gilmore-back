@@ -1,12 +1,12 @@
 import { userModel } from "../models/users.model.js";
 
-// DAO
+// DAO --> (única persistencia)
 
 export default class UsersManager {
     async findByEmail(email){
         try {
-            const userEmail = await userModel.findOne({email: email})
-            return userEmail
+            const user = await userModel.findOne({ email})
+            return user
         } catch (error) {
             return error
         }

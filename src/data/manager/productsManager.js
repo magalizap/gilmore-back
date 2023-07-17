@@ -1,6 +1,6 @@
 import { productModel } from "../models/products.model.js";
 
-// DAO
+// DAO --> (única persistencia)
 export default class ProductManager {
     async findAll(obj){
         try {

@@ -4,7 +4,7 @@ import { createOne, findOneById, addProductCart, deleteCart, deleteOne, updateCa
 export const createOneCart = async (req, res) => {
     try {
         const cart = await createOne([{products:[]}])
-        res.status(200).json({message: 'create cart', cart: cart})
+        res.status(200).json(cart)
     } catch (error) {
         res.status(500).json({error})
     }
@@ -30,7 +30,7 @@ export const addProduct = async (req, res) => {
         const addProductToCart = { id_prod: pid, quantity: parsedQuantity}
         cart.products.push(addProductToCart)
         await cart.save()
-        res.status(200).json({message: "El producto se ha añadido correctamente a su carrito"})
+        res.status(200).json(cart)
     } catch (error) {
         res.status(500).json({error})
     }

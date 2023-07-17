@@ -1,6 +1,7 @@
 import express from 'express'
-import config from './config/config.js'
+import config from './config/envConfig.js'
 import './config/dbConfig.js'
+import './config/passportStrategy.js'
 import cookieParser from 'cookie-parser'
 import session from 'express-session'
 import MongoStore from 'connect-mongo'
@@ -9,8 +10,8 @@ import productRouter from './routes/products.routes.js'
 import userRouter from './routes/users.routes.js'
 import sessionsRoutes from './routes/sessions.routes.js'
 import cartRouter from './routes/carts.routes.js'
-import './config/passportStrategy.js'
 import { __dirname } from './utils/path.js'
+import cors from 'cors'
 //import * as path from 'path'
 
 const app = express()
@@ -19,6 +20,7 @@ const app = express()
 app.use(express.json()) // para ejecutar JSON 
 app.use(express.urlencoded({extended: true})) // req.query
 app.use(cookieParser(config.signed_cookie))
+app.use(cors({origin: 'http://localhost:3000'}))
 
 app.use(session({
     store: MongoStore.create({

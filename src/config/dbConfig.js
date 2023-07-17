@@ -1,5 +1,5 @@
 import mongoose from "mongoose";
-import config from "./config.js";
+import config from "./envConfig.js";
 
 const URL = config.mongo_url
 

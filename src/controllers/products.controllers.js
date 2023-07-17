@@ -3,16 +3,19 @@ import { findAll, findById, createOne, updateOne, deleteOne } from "../services/
 export const findAllProducts = async(req, res) => {
     const { status, limit, page, price } = req.query
     try {
-        const products = await findAll(
+        const getQuerys = await findAll(
             { status: status ?? true },                   
-            { limit: limit || 10, page: page ?? 1, sort: { price: price ?? -1 }}
+            { limit: limit || 6, page: page ?? 1, sort: { price: price ?? -1 }, lean: true }
         )
-        products.prevLink = products.hasPrevPage ? `http://localhost:4000/api/products?page=${products.prevPage}` : null
-        products.nextLink = products.hasNextPage ? `http://localhost:4000/api/products?page=${products.nextPage}`: null
+        getQuerys.prevLink = getQuerys.hasPrevPage ? `http://localhost:4000/api/products?page=${getQuerys.prevPage}` : null
+        getQuerys.nextLink = getQuerys.hasNextPage ? `http://localhost:4000/api/products?page=${getQuerys.nextPage}`: null
 
-        if(products){
-            console.log(products)
-            res.status(200).json({message: 'Products found', products: products})
+        /*const products = getQuerys.docs.map(({price, title, stock, status, code, category}) => {
+            return {price, title, stock, status, code, category}
+        })*/
+
+        if(getQuerys){
+            res.status(200).json(getQuerys)
         }else{
             res.status(200).json({message: 'No products'})
         }
@@ -27,7 +30,7 @@ export const findOneProduct = async (req, res) => {
     try {
         const product = await findById(pid)
         if(product){
-            res.status(200).json({message: 'Product found'})
+            res.status(200).json(product)
         }else{
             res.status(200).json({message: 'No product'})
         }

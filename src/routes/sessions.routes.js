@@ -1,21 +1,38 @@
 import { Router } from "express";
+import passport from "passport";
+import { findUsers, destroySession } from "../controllers/users.controller.js";
+import { userModel } from "../data/models/users.model.js";
 
 const sessionRouter = Router()
 
-sessionRouter.get('/', (req, res) => {
-    res.render('login')
+
+// PASSPORT LOCAL
+
+sessionRouter.post('/signup', passport.authenticate('signup', {
+    failureRedirect: '/api/sessions/errorSignup',
+    successRedirect: '/api/products',
+}))
+
+sessionRouter.post('/login', passport.authenticate('login', {
+    failureRedirect: '/api/sessions/errorLogin',
+    successRedirect: '/api/products',
+
+}), async(req, res) => {
+
+    const user = await userModel.findOne({email})
+    req.session.user = user
+    res.send({payload: req.user})
 })
 
-sessionRouter.get('/errorLogin', (req, res) => {
-    res.render('errorLogin')
-})
+sessionRouter.get('/logout', destroySession)
 
-sessionRouter.get('/signup', (req, res) => {
-    res.render('signup')
-})
+// PASSPORT GITHUB
 
-sessionRouter.get('/errorSignup', (req, res) => {
-    res.render('errorSignup')
-})
+sessionRouter.get('/githubSignup', passport.authenticate('githubSignup', {scope: ['user: email']}))
+
+sessionRouter.get('/github', passport.authenticate('githubSignup', {failureRedirect: '/api/session/errorLogin', successRedirect: '/api/products'}))
+
+//no funciona
+sessionRouter.get('/current', findUsers )
 
 export default sessionRouter

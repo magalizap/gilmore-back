@@ -4,7 +4,8 @@ import { Strategy as LocalStrategy } from "passport-local";
 import { Strategy as GithubStrategy } from "passport-github2";
 import {hashData, compareData} from '../utils/bcrypt.js'
 import { cartModel } from "../data/models/carts.model.js";
-import config from './config.js'
+import config from './envConfig.js'
+
 
 // ESTRATEGIA LOCAL DE LOGIN
 passport.use('login', new LocalStrategy({
@@ -13,6 +14,7 @@ passport.use('login', new LocalStrategy({
 }, async(req, email, password, done) => {
     try {
         const user = await userModel.findOne({email})
+
         if(!user){
             return done(null, false)
         }
@@ -21,6 +23,7 @@ passport.use('login', new LocalStrategy({
             return done(null, false)
         }
         done(null, user)
+        
     } catch (error) {
         done(error)
     }
@@ -56,9 +59,8 @@ passport.use('signup', new LocalStrategy({
 passport.use('githubSignup', new GithubStrategy({
     clientID: config.github_client_id,
     clientSecret: config.github_client_secret,
-    callbackURL: "http://localhost:4000/api/users/github"
+    callbackURL: "http://localhost:4000/api/sessions/github"
 }, async(accessToken, refreshToken, profile, done) => {
-    console.log(profile)
     const {name, email} = profile._json
     try {
         const user = await userModel.findOne({email})

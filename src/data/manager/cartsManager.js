@@ -1,6 +1,6 @@
 import { cartModel } from "../models/carts.model.js";
 
-// DAO
+// DAO --> (única persistencia)
 
 export default class CartManager {
     async createOne(obj) {
