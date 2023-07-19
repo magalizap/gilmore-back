@@ -1,6 +1,9 @@
 import { Schema, model } from "mongoose";
 
 const userSchema = new Schema({
+    full_name: {
+        type:String,
+    },
     first_name: {
         type: String,
         required: true
@@ -23,10 +26,10 @@ const userSchema = new Schema({
         type: String,
         required: true
     },
-    isAdmin: {
-        type: Boolean,
+    role: {
+        type: String,
         required: true,
-        default: false
+        default: 'User'
     },
     idCart: {
         type: Schema.Types.ObjectId,

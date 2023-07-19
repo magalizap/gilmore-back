@@ -5,7 +5,7 @@ import { userModel } from "../models/users.model.js";
 export default class UsersManager {
     async findByEmail(email){
         try {
-            const user = await userModel.findOne({ email})
+            const user = await userModel.findOne({email})
             return user
         } catch (error) {
             return error

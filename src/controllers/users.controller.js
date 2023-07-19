@@ -1,11 +1,11 @@
-import UsersManager from "../data/manager/usersManager.js";
-//import { findUserByEmail } from "../services/users.service.js";
+import UserDB from "../data/DTO/userdb.js"
 
 
-export const findUsers = async (req, res) => {
+
+export const findUsers = async (req, res, next) => {
     try {
-       res.status(200).send(new UsersManager(req.user))
-       console.log(req.user)
+        res.status(200).send(new UserDB(req.user))
+        next()
     } catch (error) {
         res.status(500).json({error})
         console.log('error')
@@ -16,7 +16,7 @@ export const destroySession = async (req, res) => {
     try {
         if(req.session.destroy){
             req.session.destroy(() => {
-                res.redirect('/api/session')
+                res.redirect('/api/sessions/login')
             })
         }
        
@@ -33,4 +33,5 @@ export const signupUser = async (req, res) => {
         res.status(500).json({error})
     }
 }
+
 

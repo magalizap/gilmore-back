@@ -1,4 +1,8 @@
-import { createOne, findOneById, addProductCart, deleteCart, deleteOne, updateCart, updateOne } from "../services/carts.service.js";
+import { ticketModel } from "../data/models/ticket.model.js";
+import { createOne, findOneById, updateOne } from "../services/carts.service.js";
+import { findById as findProductById} from "../services/products.service.js";
+import { v4 as uuidv4 } from 'uuid'; // genera un codigo random
+import { findUserByEmail } from "../services/users.service.js";
 
 
 export const createOneCart = async (req, res) => {
@@ -90,4 +94,60 @@ export const updateOneProduct = async (req, res) => {
     } catch (error) {
         res.status(500).json({error})
     }
+}
+
+export const purchaseCart = async (req, res) => {
+    const cid = req.params.cid
+    const {email} = req.body
+    try {
+        const cart = await findOneById({_id: cid})
+        const userEmail = await findUserByEmail(email)
+        const productsToPurchase = []
+        const productsNotPurchase = []
+        
+        for(const product of cart.products){
+            const productInStock = await findProductById(product.id_prod)
+        
+            if(product.quantity <= productInStock.stock){
+                // stock disponible
+                productInStock.stock -= product.quantity
+                await productInStock.save()
+                productsToPurchase.push(product)
+                
+            }else{
+                // no hay stock suficiente
+                productsNotPurchase.push(product)
+            }
+    
+        }
+
+        // Calcular el precio total 
+        const totalPrice = productsToPurchase.reduce(
+            (total, prod) => total + prod.id_prod.price * prod.quantity,  
+            0,
+        )
+
+        // crear ticket
+        const ticket = new ticketModel({
+            code: uuidv4(),
+            amount: totalPrice,
+            purchaser: userEmail.email
+        })
+        
+        await ticket.save()
+
+        // actualizar carrito
+        cart.products = productsNotPurchase
+        await cart.save()
+        res.status(200).json({
+            message: '¡Compra finalizada con exito!',
+            ticket,
+            productsNotPurchase
+        })
+        
+
+    } catch (error) {
+        res.status(500).json({error})
+    }
+
 }
