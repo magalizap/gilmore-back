@@ -1,4 +1,5 @@
 import UserDB from "../data/DTO/userdb.js"
+import { logger } from "../middlewares/logger.js"
 
 
 
@@ -8,7 +9,7 @@ export const findUsers = async (req, res, next) => {
         next()
     } catch (error) {
         res.status(500).json({error})
-        console.log('error')
+        logger.error('error')
     }
 }
 

@@ -13,21 +13,27 @@ import cartRouter from './routes/carts.routes.js'
 import chatRouter from './routes/chats.routes.js'
 import { __dirname } from './utils/path.js'
 import cors from 'cors'
-import { Server } from 'socket.io'
+import { addLogger, logger} from './middlewares/logger.js'
+
+//import { Server } from 'socket.io'
 //import * as path from 'path'
 
 //config
 const app = express()
+app.use(addLogger)
+
 const PORT = config.port || 8080
+
+
 const server = app.listen(PORT, () => {
-    console.log(`Listening to port: ${PORT}`)
+    logger.info(`Listening to port: ${PORT}`)
 })
 
 // Middlewares
 app.use(express.json()) // para ejecutar JSON 
 app.use(express.urlencoded({extended: true})) // req.query
 app.use(cookieParser(config.signed_cookie))
-//app.use(cors({origin: 'http://localhost:3000'}))
+app.use(cors())
 
 app.use(session({
     store: MongoStore.create({
@@ -42,19 +48,8 @@ app.use(session({
 app.use(passport.initialize())// implementamos passport
 app.use(passport.session())
 
-//ServerIO y acceso a las rutas
-const io = new Server(server, {cors:{origin: 'http://localhost:5173'}})
 
 
-
-io.on('connection', (socket) => {
-    console.log('Cliente conectado')
-})
-
-app.use((req, res, next) => {
-    req.io = io
-    next()
-})
 
 // Routes
 app.use('/api/products', productRouter)
@@ -62,7 +57,15 @@ app.use('/api/users', userRouter)
 app.use('/api/sessions', sessionsRoutes)
 app.use('/api/cart', cartRouter)
 app.use('/' , chatRouter)
-
+app.use('/loggerTest', (req, res) => {
+    req.logger.info('ok, todo funciona')
+    req.logger.debug("Debug")
+    req.logger.http("Http")
+    req.logger.warning("Warning")
+    req.logger.error("Error")
+    req.logger.fatal("Fatal")
+    res.send('Probando Logger')
+})
 
 
 

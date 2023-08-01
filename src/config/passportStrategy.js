@@ -2,6 +2,7 @@ import passport from "passport";
 import { userModel } from "../data/models/users.model.js";
 import { Strategy as LocalStrategy } from "passport-local";
 import { Strategy as GithubStrategy } from "passport-github2";
+import { Strategy as GoogleStrategy } from 'passport-google-oauth20';
 import {hashData, compareData} from '../utils/bcrypt.js'
 import { cartModel } from "../data/models/carts.model.js";
 import config from './envConfig.js'
@@ -55,8 +56,8 @@ passport.use('signup', new LocalStrategy({
 
 }))
 
-// ESTRATEGIA LOGIN DE GITHUB
-passport.use('githubSignup', new GithubStrategy({
+// PASSPORT - GITHUB
+passport.use('githubStrategy', new GithubStrategy({
     clientID: config.github_client_id,
     clientSecret: config.github_client_secret,
     callbackURL: "http://localhost:4000/api/sessions/github"
@@ -83,6 +84,37 @@ passport.use('githubSignup', new GithubStrategy({
         done(error)
     }
 }))
+
+
+// ESTRATEGIA LOGIN DE GOOGLE
+passport.use('googleStrategy', new GoogleStrategy({
+    clientID: config.google_client_id,
+    clientSecret: config.google_client_secret,
+    callbackURL: "http://localhost:4000/api/sessions/google"
+}, async(accessToken, refreshToken, profile, done) => {
+    const {given_name, family_name, email} = profile._json
+    try {
+        const userDB = await userModel.findOne({email})
+        if(userDB){
+            return done(null, userDB)
+        }
+        const user = {
+            first_name: given_name,
+            last_name: family_name || '',
+            email,
+            password: ' '
+        }
+        const newUserDB = await userModel.create(user)
+        done(null, newUserDB)
+    } catch (error) {
+        done(null, error)
+    }
+}))
+
+
+
+
+
 
 // SERIALIZAR Y DESERIALIZAR
 passport.serializeUser((user, done) => {

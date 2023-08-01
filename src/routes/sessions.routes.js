@@ -29,11 +29,18 @@ sessionRouter.get('/logout', destroySession)
 
 // PASSPORT GITHUB
 
-sessionRouter.get('/githubSignup', passport.authenticate('githubSignup', {scope: ['user: email']}))
+sessionRouter.get('/githubSignup', passport.authenticate('githubStrategy', {scope: ['user: email']}))
 
-sessionRouter.get('/github', passport.authenticate('githubSignup', {failureRedirect: '/api/session/errorLogin', successRedirect: '/api/products'}))
+sessionRouter.get('/github', passport.authenticate('githubStrategy', {failureRedirect: '/api/session/errorLogin', successRedirect: 'http://localhost:5173/'}))
 
-                
+
+// PASSPORT GOOGLE
+
+sessionRouter.get('/googleSignup', passport.authenticate('googleStrategy', { scope: ['profile', 'email'] }));
+ 
+sessionRouter.get('/google', passport.authenticate('googleStrategy', {failureRedirect: '/api/session/errorLogin', successRedirect: 'http://localhost:5173/'}))
+
+
 sessionRouter.get('/current', authUser , findUsers)
 
 export default sessionRouter
