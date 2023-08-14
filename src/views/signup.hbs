@@ -1,0 +1,24 @@
+<div class="centerLogin">
+    <form action="/api/sessions/signup" method="post" class='form' >
+        <p class='title'>FORMULARIO REGISTRO:</p>
+        <label>Nombre:</label>
+        <input class='inputLogin'  type='text'  name="first_name" ></input>
+        <label>Apellido:</label>
+        <input class='inputLogin'  type='text'  name="last_name" ></input>
+        <label>Email:</label>
+        <input class='inputLogin'  type='email' name="email" ></input>
+        <label>Contraseña:</label>
+        <input class='inputLogin'  type='password' name="password" ></input>
+
+        <button type="submit" class="btn btn-primary submit">Registrar</button>
+        <p class="toSignup"> ¿No tienes una cuanta?<a href='/api/users/login'>Inicia sesión</a></p>
+    </form>
+    <p class="or">O</p>
+    <div class="alinear">
+    <button class="smbtn" onclick="location.href='/api/sessions/githubSignup'">
+    <img src='/img/github.png' class="icon"/>Github
+    </button>
+    <button class="smbtn" onclick="location.href='/api/sessions/googleSignup'">
+    <img src='/img/google.png' class="icon"/>Google</button>
+    </div>       
+</div>      

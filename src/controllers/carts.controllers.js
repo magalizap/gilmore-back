@@ -28,15 +28,25 @@ export const addProduct = async (req, res) => {
     const cid = req.params.cid 
     const pid = req.params.pid
     const quantity = req.body.quantity
+
     try {
+
+        const product = await findProductById(pid)
+
+        if(req.user.role === 'Premium' && req.user.email === product.owner){
+            return res.status(400).json({message: 'No puedes agregar productos que ya te pertenecen a tu carrito'})
+        }
+
         const parsedQuantity = parseInt(quantity)
         const cart = await findOneById({_id: cid})
+
+        console.log(cart.products.owner)
         const addProductToCart = { id_prod: pid, quantity: parsedQuantity}
         cart.products.push(addProductToCart)
         await cart.save()
         res.status(200).json(cart)
     } catch (error) {
-        res.status(500).json({error})
+        res.status(500).json({error: 'error en addProduct'})
     }
 }
 

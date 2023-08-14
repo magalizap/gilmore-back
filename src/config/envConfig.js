@@ -26,5 +26,7 @@ export default {
     github_client_secret: process.env.GITHUB_CLIENT_SECRET,
     google_client_id: process.env.GOOGLE_CLIENT_ID,
     google_client_secret: process.env.GOOGLE_CLIENT_SECRET,
+    gmail_user: process.env.GMAIL_USER,
+    gmail_password: process.env.GMAIL_PASSWORD,
     node_env: process.env.NODE_ENV
 }

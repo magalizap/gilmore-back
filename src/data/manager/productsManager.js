@@ -31,7 +31,7 @@ export default class ProductManager {
 
     async updateOne(id, obj){
         try {
-            const updateProduct = await productModel.updateOne({_id:id}, {$inc: obj})
+            const updateProduct = await productModel.findByIdAndUpdate(id, obj)
             return updateProduct
         } catch (error) {
             return error

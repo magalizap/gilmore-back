@@ -28,13 +28,15 @@ const userSchema = new Schema({
     },
     role: {
         type: String,
-        required: true,
+        enum: ['Admin', 'User', 'Premium'],
         default: 'User'
     },
     idCart: {
         type: Schema.Types.ObjectId,
         ref: 'carts'
-    }
+    },
+    timeToExpiredPass: Date,
+    tokenPass: String
 })
 
 export const userModel = model('users', userSchema)

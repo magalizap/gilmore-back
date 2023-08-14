@@ -1,14 +1,17 @@
 import { Router } from "express";
 import { createOneProduct, deleteOneProduct, findAllProducts, findOneProduct, updateOneProduct } from "../controllers/products.controllers.js";
-import { authAdmin } from "../middlewares/auth.js";
+import { authAdminOrUserPremium, isAuthenticated } from "../middlewares/auth.js";
 
 
 const productRouter = Router()
 
-productRouter.get('/', findAllProducts)
-productRouter.get('/:pid', findOneProduct)
-productRouter.post('/', authAdmin , createOneProduct)
-productRouter.put('/:pid', authAdmin , updateOneProduct)
-productRouter.delete('/:pid', authAdmin , deleteOneProduct)
+// all users
+productRouter.get('/', isAuthenticated ,findAllProducts)
+productRouter.get('/:pid', isAuthenticated, findOneProduct)
+
+// rol de admin or user premium
+productRouter.post('/', authAdminOrUserPremium , createOneProduct)
+productRouter.put('/:pid', authAdminOrUserPremium ,updateOneProduct)   
+productRouter.delete('/:pid', authAdminOrUserPremium , deleteOneProduct)
 
 export default productRouter

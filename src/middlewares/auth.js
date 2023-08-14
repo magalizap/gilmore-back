@@ -1,40 +1,45 @@
 // Middleware de autenticación de usuarios
 
+import { logger } from "./logger.js";
+
+export const isAuthenticated = (req, res, next) => {
+    if(!req.user) return res.redirect('/api/users/login')
+
+    if (req.user.role === 'Admin') {
+        res.locals.isAdmin = true;
+    } else {
+        res.locals.isAdmin = false;
+    }
+
+    next();
+}
+
 export const authUser = (req, res, next) => {
-    if(!req.user){
-        return res.status(401).send('Debes iniciar sesión primero')
-    }
-    if(req.user.role !== 'User'){
-        return res.status(401).send({ error: "User no posee los permisos necesarios" })
-    }
-    next()
-}
-
-export const authAdmin = (req, res, next) => {
-    if(!req.user){
-        return res.status(401).send('Debes iniciar sesión primero')
-    }
-    if(req.user.role !== 'Admin'){
-        return res.status(500).json({error})
-    }
-    next()
-}
-/*
-export const roleVerification = (role) => {
-    return async (req, res, next) => {
-        const userAccess = req.user.user[0]
-        if (!req.user) {
-            return res.status(401).send({ error: "User no autorizado" })
-        }
-
-        if (userAccess.rol != role) { //El user no tiene el rol necesario a esta ruta y a este rol
-            return res.status(401).send({ error: "User no posee los permisos necesarios" })
-        }
-
+    if(!req.user) return res.redirect('/api/users/login')
+    if(req.user.role === 'User') {
+        logger.info('tienes rol de usuario')
+        res.locals.isAdmin = false
         next()
+    } else if (req.user.role === 'Premium') {
+        logger.info('tienes la cuenta premium')
+        res.locals.isPremium = true
+        next()
+    } 
+}
 
+export const authAdminOrUserPremium = (req, res, next) => {
+
+    if(!req.user) return res.redirect('/api/users/login')
+    if (req.user.role === 'Admin') {
+        logger.info('tienes rol de administrador')
+        res.locals.isAdmin = true
+        next()
+    } else if (req.user.role === 'Premium') {
+        logger.info('tienes la cuenta premium')
+        res.locals.isPremium = true
+        next()
     }
+      
+}
 
-} 
-*/
 

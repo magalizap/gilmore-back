@@ -7,15 +7,17 @@ export const findAllProducts = async(req, res) => {
             { status: status ?? true },                   
             { limit: limit || 6, page: page ?? 1, sort: { price: price ?? -1 }, lean: true }
         )
-        getQuerys.prevLink = getQuerys.hasPrevPage ? `http://localhost:4000/api/products?page=${getQuerys.prevPage}` : null
-        getQuerys.nextLink = getQuerys.hasNextPage ? `http://localhost:4000/api/products?page=${getQuerys.nextPage}`: null
+        getQuerys.prevLink = getQuerys.hasPrevPage ? `http://${req.headers.host}/api/products?page=${getQuerys.prevPage}` : null
+        getQuerys.nextLink = getQuerys.hasNextPage ? `http://${req.headers.host}/api/products?page=${getQuerys.nextPage}`: null
 
-        /*const products = getQuerys.docs.map(({price, title, stock, status, code, category}) => {
-            return {price, title, stock, status, code, category}
-        })*/
+        const products = getQuerys.docs.map(({price, title, stock, status, code, category, _id}) => {
+            return {price, title, stock, status, code, category, _id}
+        })
+
 
         if(getQuerys){
-            res.status(200).json(getQuerys)
+            res.render('products', {products, style: 'products.css'})
+
         }else{
             res.status(200).json({message: 'No products'})
         }
@@ -30,7 +32,8 @@ export const findOneProduct = async (req, res) => {
     try {
         const product = await findById(pid)
         if(product){
-            res.status(200).json(product)
+            res.render('productDetail', {product, style: 'products.css'})
+
         }else{
             res.status(200).json({message: 'No product'})
         }
@@ -41,36 +44,54 @@ export const findOneProduct = async (req, res) => {
 
 export const createOneProduct = async (req, res) => {
     const { title, description, price, thumbnail, code, stock, status, category } = req.body
+
     if(!title || !description || !price || !thumbnail || !code || !stock || !status || !category){
         return res.status(400).json({message: 'Missing data'})
     }
 
+    let ownerEmail
+
+    if (req.user.role === 'Premium'){
+       ownerEmail = req.user.email 
+    }
+
+
     try {
-        const newProduct = await createOne([{title, description, price, thumbnail, code, stock, status, category}])
+        const newProduct = await createOne([{title, description, price, thumbnail, code, stock, status, category, owner: ownerEmail}])
+
         res.status(200).json({message: 'Product create', product: newProduct})
     } catch (error) {
-        res.status(500).json({error})
+        res.status(500).json({error: 'error en createOneProduct'})
     }
 }
 
 export const updateOneProduct = async (req, res) => {
     const pid = req.params.pid
-    const {stock} = req.body
-
+    const product = await findById(pid)
+    const obj = req.body
     try {
-        const updateProduct = await updateOne({_id:pid}, {$inc: stock}) // revisar
-        res.status(200).json({message: "Product update", product: updateProduct})
+        // Verificar si el usuario es un admin o el dueño del producto
+        if (req.user.role === 'Admin' || (req.user.role === 'Premium' && req.user.email === product.owner)){
+            const updateProduct = await updateOne(pid, obj) 
+            res.status(200).json({message: "Product update"})
+        }
+
     } catch (error) {
-        res.status(500).json({error})
+        res.status(500).json({error: 'error en updateOneProduct'})
     }
 }
 
 export const deleteOneProduct = async (req, res) => {
     const pid = req.params.pid
+    const product = await findById(pid)
     try {
-        const deleteProduct = await deleteOne(pid)
-        res.status(200).json({message: "Product delete", product: deleteProduct})
+        // Verificar si el usuario es un admin o el dueño del producto
+        if (req.user.role === 'Admin' || (req.user.role === 'Premium' && req.user.email === product.owner)) {
+            const deleteProduct = await deleteOne(pid)
+            res.status(200).json({message: "Product delete", product: deleteProduct})
+        }
+        
     } catch (error) {
-        res.status(500).json({error})
+        res.status(500).json({error: 'error en deleteOneProduct'})
     }
 }

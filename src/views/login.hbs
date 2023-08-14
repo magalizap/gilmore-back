@@ -1,0 +1,22 @@
+<div class="centerLogin">
+    <form action="/api/sessions/login" method="post" class='form' >
+        <p class='title'>INICIA SESIÓN:</p>
+        <label>Email:</label>
+        <input class='inputLogin'  type='email' name="email" ></input>
+        <label>Contraseña:</label>
+        <input class='inputLogin' type="password" name="password" ></input>
+
+        <input class="btn btn-primary submit" type="submit" value="LOGIN">
+        <p class="toSignup"> ¿No tienes una cuanta?<a href='/api/users/signup'>Registrate</a></p>
+        <p class="toSignup"> <a href='/api/users/restore'>¿Olvidaste tu contraseña?</a></p>
+    </form>
+    <p class="or">O</p>
+    <div class="alinear">
+
+    <button class="smbtn" onclick="location.href='/api/sessions/githubSignup'">
+    <img src='/img/github.png' class="icon"/>Github
+    </button>
+    <button class="smbtn" onclick="location.href='/api/sessions/googleSignup'">
+    <img src='/img/google.png' class="icon"/>Google</button>
+    </div>
+</div>

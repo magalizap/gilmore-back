@@ -1,0 +1,49 @@
+<nav class="navbar navbar-expand-lg navbar-light bg-light">
+  <div class="container-fluid">
+    <a class="navbar-brand" href="/api/products">MATESULI</a>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+
+      <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+        {{#if isAdmin }}
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+            Administrar productos
+          </a>
+          <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+            <li><a class="dropdown-item" href="/api/products">Añadir producto</a></li>
+            <li><a class="dropdown-item" href="/api/products/{{_id}}">Modificar producto</a></li>
+            <li><hr class="dropdown-divider"></li>
+            <li><a class="dropdown-item" href="/api/products/{{_id}}">Actualizar producto</a></li>
+          </ul>
+        </li>
+        {{else if isPremium }}
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+            Mis productos
+          </a>
+          <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+            <li><a class="dropdown-item" href="/api/products">Añadir producto</a></li>
+            <li><a class="dropdown-item" href="/api/products/{{_id}}">Modificar producto</a></li>
+            <li><hr class="dropdown-divider"></li>
+            <li><a class="dropdown-item" href="/api/products/{{_id}}">Actualizar producto</a></li>
+          </ul>
+        </li>
+        {{/if}}
+      </ul>
+
+      <ul class="navbar-nav ml-auto" >
+      {{#if user}}
+        <a class="nav-link active" aria-current="page" href="/api/sessions/logout">Cerrar sesión</a>
+        <a class="nav-link" href="/api/sessions/current">Perfil</a>
+      {{else}}
+        <a class="nav-link active" aria-current="page" href="/api/users/login">Inicia sesión</a>
+        <a class="nav-link" href="/api/users/signup">Regístrate</a>
+      {{/if}}
+      </ul>
+
+    </div>
+  </div>
+</nav>

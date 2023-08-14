@@ -10,12 +10,12 @@ const levelOptions = {
         debug: 5
     },
     colors: {
-        fatal: 'red',
-        error: 'magenta',
-        warning: 'yellow',
-        info: 'blue',
-        http: 'white',
-        debug: 'green'
+        fatal: "red",
+        error: "magenta",
+        warning: "yellow",
+        info: "blue",
+        http: "green",
+        debug: "cyan"
     }
 }
 

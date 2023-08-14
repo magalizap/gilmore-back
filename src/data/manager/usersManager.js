@@ -11,4 +11,31 @@ export default class UsersManager {
             return error
         }
     }
+
+    async findById(id){
+        try {
+            const user = await userModel.findById(id)
+            return user
+        } catch (error) {
+            return error
+        }
+    }
+
+    async findByToken(tokenPass){
+        try {
+            const user = await userModel.findOne({tokenPass})
+            return user
+        } catch (error) {
+            return error
+        }
+    }
+
+    async findByExpired(tokenPass, timeToExpiredPass){
+        try {
+            const user = await userModel.findOne(tokenPass, timeToExpiredPass)
+            return user
+        } catch (error) {
+            return error
+        }
+    }
 }

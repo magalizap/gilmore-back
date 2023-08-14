@@ -12,29 +12,44 @@ import sessionsRoutes from './routes/sessions.routes.js'
 import cartRouter from './routes/carts.routes.js'
 import chatRouter from './routes/chats.routes.js'
 import { __dirname } from './utils/path.js'
-import cors from 'cors'
 import { addLogger, logger} from './middlewares/logger.js'
+import { engine } from 'express-handlebars'
+import * as path from 'path'
+
 
 //import { Server } from 'socket.io'
-//import * as path from 'path'
+
+
 
 //config
 const app = express()
-app.use(addLogger)
-
 const PORT = config.port || 8080
-
-
 const server = app.listen(PORT, () => {
     logger.info(`Listening to port: ${PORT}`)
 })
 
+//hbs
+app.engine('hbs', engine({runtimeOptions: 
+    { allowProtoPropertiesByDefault: true, 
+    allowProtoMethodsByDefault: true},
+    extname: 'hbs',
+    helpers: {eq: function(a, b, options){
+        if(a === b){
+            return options.fn(this)
+        }else{
+            return options.inverse(this)
+        }
+    }}
+}))
+app.set('view engine', 'hbs') // vistas hbs
+app.set('views', path.resolve(__dirname, './views')) //mi ruta
+
+
 // Middlewares
+app.use(express.static(__dirname +'/public'))
 app.use(express.json()) // para ejecutar JSON 
 app.use(express.urlencoded({extended: true})) // req.query
 app.use(cookieParser(config.signed_cookie))
-app.use(cors())
-
 app.use(session({
     store: MongoStore.create({
         mongoUrl: config.mongo_url,
@@ -47,7 +62,22 @@ app.use(session({
 }))
 app.use(passport.initialize())// implementamos passport
 app.use(passport.session())
+app.use(addLogger)
 
+// variables globales
+
+app.use((req, res, next) => {
+    res.locals.user = req.user || null  
+    next()
+})
+
+
+// ServerIO y acceso a las rutas
+/*const io = new Server(server, {cors: {origin: '*'}}) 
+app.use((req, res, next) => {
+    req.io = io
+    return next()
+})*/
 
 
 
@@ -56,7 +86,9 @@ app.use('/api/products', productRouter)
 app.use('/api/users', userRouter)
 app.use('/api/sessions', sessionsRoutes)
 app.use('/api/cart', cartRouter)
-app.use('/' , chatRouter)
+app.use('/chat' , chatRouter)
+
+
 app.use('/loggerTest', (req, res) => {
     req.logger.info('ok, todo funciona')
     req.logger.debug("Debug")
@@ -66,7 +98,3 @@ app.use('/loggerTest', (req, res) => {
     req.logger.fatal("Fatal")
     res.send('Probando Logger')
 })
-
-
-
-

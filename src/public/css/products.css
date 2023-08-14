@@ -1,0 +1,59 @@
+/*PRODUCTS*/
+
+.submit{
+    background-color: #248277;
+    color: #fff;
+}
+
+.btn:hover {
+    background-color: #036666;
+    border-color: #036666;
+}
+
+
+@media screen and (min-width:300px) {
+    .alinearProductos{
+        display: grid;
+        grid-template-columns: repeat(1, 1fr);
+        align-items: center
+    }
+}
+
+@media screen and (min-width:600px) {
+    .alinearProductos{
+        display: grid;
+        grid-template-columns: repeat(1, 1fr);
+    }
+}
+
+@media screen and (min-width:900px) {
+    .alinearProductos{
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media screen and (min-width:1200px) {
+    .alinearProductos{
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 25px;
+    }
+    .cards{
+        width: 85%;
+    }
+}
+
+/*PRODUCT DETAIL*/
+
+.centerCard {
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    align-items: center;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+    border-radius: 10px;
+    overflow: hidden;
+    padding: 40px;
+    width: 100%;
+}
