@@ -15,20 +15,18 @@ import { __dirname } from './utils/path.js'
 import { addLogger, logger} from './middlewares/logger.js'
 import { engine } from 'express-handlebars'
 import * as path from 'path'
-
-
-//import { Server } from 'socket.io'
+import { Server } from 'socket.io'
 
 
 
-//config
+// Config
 const app = express()
 const PORT = config.port || 8080
 const server = app.listen(PORT, () => {
     logger.info(`Listening to port: ${PORT}`)
 })
 
-//hbs
+// Handlebars
 app.engine('hbs', engine({runtimeOptions: 
     { allowProtoPropertiesByDefault: true, 
     allowProtoMethodsByDefault: true},
@@ -64,22 +62,24 @@ app.use(passport.initialize())// implementamos passport
 app.use(passport.session())
 app.use(addLogger)
 
-// variables globales
-
+// Variables globales
 app.use((req, res, next) => {
     res.locals.user = req.user || null  
     next()
 })
 
 
-// ServerIO y acceso a las rutas
-/*const io = new Server(server, {cors: {origin: '*'}}) 
-app.use((req, res, next) => {
-    req.io = io
+// ServerIO
+const io = new Server(server, {cors: {origin: 'http://localhost:4000'}}) // también probé con '*' pero sigue sin dar resultado
+
+io.on('connection', async (socket) => {
+    console.log('Client connected')
+})
+
+app.use((req, res, next) => { // con este middleware intento acceder a socket desde mis rutas
+    req.io = io    
     return next()
-})*/
-
-
+})
 
 // Routes
 app.use('/api/products', productRouter)
@@ -89,6 +89,7 @@ app.use('/api/cart', cartRouter)
 app.use('/chat' , chatRouter)
 
 
+// Logger
 app.use('/loggerTest', (req, res) => {
     req.logger.info('ok, todo funciona')
     req.logger.debug("Debug")

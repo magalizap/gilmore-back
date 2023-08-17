@@ -13,11 +13,11 @@ export const findAllProducts = async(req, res) => {
         const products = getQuerys.docs.map(({price, title, stock, status, code, category, _id}) => {
             return {price, title, stock, status, code, category, _id}
         })
-
+        // pruebo enviar mi lista de productos de esta manera
+        req.io.emit('getProducts', products)
 
         if(getQuerys){
-            res.render('products', {products, style: 'products.css'})
-
+            res.render('products', {getQuerys, style: 'products.css'})
         }else{
             res.status(200).json({message: 'No products'})
         }

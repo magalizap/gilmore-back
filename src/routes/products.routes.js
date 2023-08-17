@@ -10,7 +10,7 @@ productRouter.get('/', isAuthenticated ,findAllProducts)
 productRouter.get('/:pid', isAuthenticated, findOneProduct)
 
 // rol de admin or user premium
-productRouter.post('/', authAdminOrUserPremium , createOneProduct)
+productRouter.post('/realtimeproducts', authAdminOrUserPremium , createOneProduct)
 productRouter.put('/:pid', authAdminOrUserPremium ,updateOneProduct)   
 productRouter.delete('/:pid', authAdminOrUserPremium , deleteOneProduct)
 

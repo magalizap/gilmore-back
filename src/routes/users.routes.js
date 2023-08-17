@@ -1,6 +1,6 @@
 import { Router } from "express";
 import { changeRol, validateToken } from "../controllers/users.controller.js";
-import { authUser } from "../middlewares/auth.js";
+
 
 
 const userRouter = Router()

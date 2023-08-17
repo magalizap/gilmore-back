@@ -1,5 +1,5 @@
 
-import UserDB from "../data/DTO/userdb.js"
+import UserDB from "../data/dto/userdb.js"
 import { logger } from "../middlewares/logger.js"
 import { findUserByEmail, findUserById, findUserByToken, findUserToUpdate } from "../services/users.service.js"
 import crypto from 'crypto'
