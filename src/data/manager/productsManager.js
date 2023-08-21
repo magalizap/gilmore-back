@@ -2,9 +2,9 @@ import { productModel } from "../models/products.model.js";
 
 // DAO --> (única persistencia)
 export default class ProductManager {
-    async findAll(obj){
+    async findAll(filter, obj){
         try {
-            const products = await productModel.paginate(obj)
+            const products = await productModel.paginate(filter, obj)
             return products
         } catch (error) {
             return error
@@ -22,7 +22,7 @@ export default class ProductManager {
 
     async createOne(obj){
         try {
-            const newProduct = await productModel.create(obj)
+            const newProduct = await productModel.create([obj])
             return newProduct
         } catch (error) {
             return error   

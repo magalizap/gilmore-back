@@ -5,12 +5,17 @@ import { authUser } from "../middlewares/auth.js";
 const cartRouter = Router()
 
 cartRouter.post('/', createOneCart)
+
 cartRouter.get('/:cid', findById)
+cartRouter.put('/:cid', updateOneProduct)
+cartRouter.delete('/:cid', deleteOneCart)
+
+
 cartRouter.post('/:cid/product/:pid', authUser ,addProduct)
 cartRouter.delete('/:cid/product/:pid', deleteOneProduct)
-cartRouter.delete('/:cid', deleteOneCart)
 cartRouter.put('/:cid/product/:pid', updateOneCart)
-cartRouter.put('/:cid', updateOneProduct)
-cartRouter.post('/:cid/purchase', purchaseCart)
+
+
+cartRouter.post('/:cid/purchase', purchaseCart) 
 
 export default cartRouter

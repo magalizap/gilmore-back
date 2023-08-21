@@ -20,10 +20,9 @@ export const authUser = (req, res, next) => {
         logger.info('tienes rol de usuario')
         res.locals.isAdmin = false
         next()
-    } else if (req.user.role === 'Premium') {
-        logger.info('tienes la cuenta premium')
-        res.locals.isPremium = true
-        next()
+    } else {
+        logger.error('solo el usuario tiene acceso a esta ruta')
+        return res.redirect('/api/products')
     } 
 }
 
@@ -38,6 +37,9 @@ export const authAdminOrUserPremium = (req, res, next) => {
         logger.info('tienes la cuenta premium')
         res.locals.isPremium = true
         next()
+    }else {
+        logger.error('no tienes los permisos suficientes')
+        return res.redirect('/api/products')
     }
       
 }

@@ -1,10 +1,10 @@
-<div class="alinearProductos" id="products"></div>
-<a href={{this.prevLink}}>BACK</a>
-<a href={{this.nextLink}}>NEXT</a>
-
 <!--
+<div class="alinearProductos" id="products"></div>-->
+
+
+
 <div class="alinearProductos">
-  {{#each products}}
+  {{#each products.docs}}
   <div class="card" style="width: 18rem;">
     <img src="/img/image.jpg" class="card-img-top" alt="img">
     <div class="card-body">
@@ -16,4 +16,5 @@
   </div>
   {{/each}}
 </div>
--->
+<a href={{products.prevLink}}>BACK</a>
+<a href={{products.nextLink}}>NEXT</a>

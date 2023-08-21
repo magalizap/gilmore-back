@@ -4,9 +4,9 @@ import ProductManager from "../data/manager/productsManager.js";
 const productManager = new ProductManager()
 
 
-export const findAll = async (obj) => {
+export const findAll = async (filter, obj) => {
     try {
-        const products = await productManager.findAll(obj)
+        const products = await productManager.findAll(filter, obj)
         return products
     } catch (error) {
         return error
@@ -30,7 +30,6 @@ export const createOne = async (obj) => {
         return error
     }
 }
-
 export const updateOne = async (id, obj) => {
     try {
         const updateProduct = await productManager.updateOne(id, obj)

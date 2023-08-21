@@ -16,6 +16,7 @@ import { addLogger, logger} from './middlewares/logger.js'
 import { engine } from 'express-handlebars'
 import * as path from 'path'
 import { Server } from 'socket.io'
+import { swaggerServe, swaggerSetup } from './utils/swagger.js'
 
 
 
@@ -23,7 +24,7 @@ import { Server } from 'socket.io'
 const app = express()
 const PORT = config.port || 8080
 const server = app.listen(PORT, () => {
-    logger.info(`Listening to port: ${PORT}`)
+    logger.info(`🚀 Server listening on port: ${PORT}`)
 })
 
 // Handlebars
@@ -70,13 +71,8 @@ app.use((req, res, next) => {
 
 
 // ServerIO
-const io = new Server(server, {cors: {origin: 'http://localhost:4000'}}) // también probé con '*' pero sigue sin dar resultado
-
-io.on('connection', async (socket) => {
-    console.log('Client connected')
-})
-
-app.use((req, res, next) => { // con este middleware intento acceder a socket desde mis rutas
+const io = new Server(server, {cors: {origin: '*'}}) 
+app.use((req, res, next) => { // acceso a io en mis rutas
     req.io = io    
     return next()
 })
@@ -87,6 +83,8 @@ app.use('/api/users', userRouter)
 app.use('/api/sessions', sessionsRoutes)
 app.use('/api/cart', cartRouter)
 app.use('/chat' , chatRouter)
+app.use('/api/docs', swaggerServe, swaggerSetup)
+
 
 
 // Logger

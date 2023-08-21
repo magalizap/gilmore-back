@@ -1,0 +1,51 @@
+/*.centerCard {
+    display: flex;
+    justify-content: center;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+    border-radius: 10px;
+    overflow: hidden;
+    padding: 40px;
+}
+
+.form {
+    width: 100%;
+}
+
+.item {
+    display: flex;
+    flex-direction: column;
+    width: 30%;
+}
+
+.title {
+    display: flex;
+    justify-content: center;
+    font-weight: bold;
+}
+.alinear {
+    display: flex;
+    justify-content: space-around;
+}
+
+.inputProd {
+    margin-top: 5px;
+    margin-bottom: 10px;
+    height: 30px;
+    border-radius: 4px;
+}
+
+.descrip {
+    margin-top: 5px;
+    margin-bottom: 10px;
+    height: 60px;
+    border-radius: 4px;
+}
+
+.submit {
+    display: flex;
+    justify-content:flex-end;
+    margin-top: 10px;
+    margin-left: 70%;
+    background-color: #56AB91;
+    color: #fff;
+}*/

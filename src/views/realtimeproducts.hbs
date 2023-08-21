@@ -1,15 +1,50 @@
-<div class="centerLogin">
-    <form id="formProduct" >
-        <p class='title'>AÑADIR PRODUCTO:</p>
-        <label for="title" >Title</label>
-        <input type="text"  class='inputLogin' name="title">
+<div class="centerCard">
+    <form id="formProduct"  class="form" enctype="multipart/form-data">
+        <p class='title'>AÑADIR NUEVO PRODUCTO:</p>
+        <section class="alinear">
+            <div class="item">
+                <label for="title" >Nombre:</label>
+                <input type="text" class="inputProd" name="title">
+            </div>
 
+            <div class="item">
+                <label for="category" >Categoría:</label>
+                <select name="category" required>
+                    <option value="1">1</option>
+                    <option value="1">2</option>
+                    <option value="3">3</option>
+                </select>
+            </div>
+        </section>
 
-        <label for="description" >Description</label>
-        <input type="text"  class='inputLogin' class="form-control" name="description">
+        <section  class="alinear">
+            <div class="item">
+                <label for="price" >Precio:</label>
+                <input type="number" class="inputProd"  name="price">
+            </div>
+            <div class="item"> 
+                <label for="stock" >Stock disponible:</label>
+                <input type="number" class="inputProd" name="stock">
+            </div>
+        </section>
 
-        <label for="price" >Price</label>
-        <input type="number"  class='inputLogin' name="price">
-        <button type="submit" class="btn btn-primary">Crear producto</button>
+        <section class="alinear">
+
+            <div class="item">
+                <label for="description" >Descripción:</label>
+                <input type="text" class="descrip" name="description">
+            </div>
+            
+            <div class="item">
+                <label for="thumbnail" >Imagen:</label>
+                <input  type="file" name="thumbnail" class="inputProd" accept="image/*">
+            </div>
+        </section>
+        <input class="btn newSubmit" type="submit" value="CARGAR PRODUCTO">
     </form>
 </div>
+<p class='title'>LISTA DE PRODUCTOS:</p>
+<div class="productList" id="products"></div>
+
+
+
