@@ -1,5 +1,4 @@
 // Middleware de autenticación de usuarios
-
 import { logger } from "./logger.js";
 
 export const isAuthenticated = (req, res, next) => {
@@ -7,8 +6,11 @@ export const isAuthenticated = (req, res, next) => {
 
     if (req.user.role === 'Admin') {
         res.locals.isAdmin = true;
-    } else {
+    } else if(req.user.role === 'Premium'){
+        res.locals.isPremium = true
+    }else {
         res.locals.isAdmin = false;
+        res.locals.isPremium = false
     }
 
     next();

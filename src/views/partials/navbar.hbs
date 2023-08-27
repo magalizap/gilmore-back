@@ -8,34 +8,16 @@
 
       <ul class="navbar-nav me-auto mb-2 mb-lg-0">
         {{#if isAdmin }}
-        <li class="nav-item dropdown">
-          <a class="nav-link dropdown-toggle" href="/api/products/realtimeproducts" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-            Administrar productos
-          </a>
-          <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
-            <li><a class="dropdown-item" href="/api/products/realtimeproducts">Añadir producto</a></li>
-            <li><a class="dropdown-item" href="/api/products/{{_id}}">Modificar producto</a></li>
-            <li><hr class="dropdown-divider"></li>
-            <li><a class="dropdown-item" href="/api/products/{{_id}}">Actualizar producto</a></li>
-          </ul>
-        </li>
+          <a class="nav-link active" aria-current="page" href="/api/products/realtimeproducts">Administrar productos</a>
+          
         {{else if isPremium }}
-        <li class="nav-item dropdown">
-          <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-            Mis productos
-          </a>
-          <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
-            <li><a class="dropdown-item" href="/api/products">Añadir producto</a></li>
-            <li><a class="dropdown-item" href="/api/products/{{_id}}">Modificar producto</a></li>
-            <li><hr class="dropdown-divider"></li>
-            <li><a class="dropdown-item" href="/api/products/{{_id}}">Actualizar producto</a></li>
-          </ul>
-        </li>
+          <a class="nav-link active" aria-current="page" href="/api/products/realtimeproducts">Administrar productos</a>
         {{/if}}
       </ul>
 
       <ul class="navbar-nav ml-auto" >
       {{#if user}}
+        <a class="nav-link active" aria-current="page" href="/chat"><img src='/img/chat.png'/></a>
         <a class="nav-link active" aria-current="page" href="/api/sessions/logout">Cerrar sesión</a>
         <a class="nav-link" href="/api/sessions/current">Perfil</a>
       {{else}}

@@ -1,17 +1,17 @@
 import dotenv from 'dotenv'
-/*import { Command } from 'commander'
+import { Command } from 'commander'
 
 const program = new Command()
 
 program
 .option('-m, --mode <mode>', 'ambiente de desarrollo', 'dev')
-.option()
+
 
 program.parse()
 
-const enviroment = program.opts().mode*/
+const enviroment = program.opts().mode
 
-const enviroment = 'dev'
+//const enviroment = 'dev'
 
 dotenv.config({
     path: enviroment === 'dev' ? './.env.development' : './.env.production'

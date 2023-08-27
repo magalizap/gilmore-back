@@ -27,23 +27,19 @@ sessionRouter.post('/login', passport.authenticate('login', {
 sessionRouter.get('/logout', destroySession)
 
 // PASSPORT GITHUB
-
 sessionRouter.get('/githubSignup', passport.authenticate('githubStrategy', {scope: ['user: email']}))
-
 sessionRouter.get('/github', passport.authenticate('githubStrategy', {failureRedirect: '/api/session/errorLogin', successRedirect: '/api/products'}))
 
 
 // PASSPORT GOOGLE
-
 sessionRouter.get('/googleSignup', passport.authenticate('googleStrategy', { scope: ['profile', 'email'] }));
- 
 sessionRouter.get('/google', passport.authenticate('googleStrategy', {failureRedirect: '/api/session/errorLogin', successRedirect: '/api/products'}))
 
 // PERFIL DEL USUARIO
 sessionRouter.get('/current', isAuthenticated, findUsers)
 
-// RESTAURACIÓN DE CONTRASEÑAS
 
+// RESTAURACIÓN DE CONTRASEÑAS
 sessionRouter.post('/restore', restorePass)
 sessionRouter.post('/restorePass/:tokenPass', updatePass)
 

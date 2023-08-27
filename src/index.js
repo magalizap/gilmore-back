@@ -17,6 +17,7 @@ import { engine } from 'express-handlebars'
 import * as path from 'path'
 import { Server } from 'socket.io'
 import { swaggerServe, swaggerSetup } from './utils/swagger.js'
+import errorHandler from './middlewares/errors/index.js'
 
 
 
@@ -57,7 +58,7 @@ app.use(session({
     }),
     secret: config.session_secret,
     resave: false, //para que mi sesión se mantenga activa
-    saveUninitialized: true // guarda mi sesión aunq no contenga info
+    saveUninitialized: false // elimino las sesiones que están vacías
 }))
 app.use(passport.initialize())// implementamos passport
 app.use(passport.session())
@@ -72,6 +73,7 @@ app.use((req, res, next) => {
 
 // ServerIO
 const io = new Server(server, {cors: {origin: '*'}}) 
+
 app.use((req, res, next) => { // acceso a io en mis rutas
     req.io = io    
     return next()
@@ -97,3 +99,6 @@ app.use('/loggerTest', (req, res) => {
     req.logger.fatal("Fatal")
     res.send('Probando Logger')
 })
+
+// manejo de errores
+app.use(errorHandler)

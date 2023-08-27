@@ -5,8 +5,8 @@
   "main": "index.js",
   "type": "module",
   "scripts": {
-    "dev": "nodemon src/index.js",
-    "start": "nodemon src/index.js"
+    "dev": "nodemon src/index.js -m dev",
+    "start": "nodemon src/index.js -m prod"
   },
   "keywords": [],
   "author": "",
@@ -16,6 +16,7 @@
   },
   "dependencies": {
     "bcrypt": "^5.1.0",
+    "commander": "^11.0.0",
     "connect-mongo": "^5.0.0",
     "cookie-parser": "^1.4.6",
     "cors": "^2.8.5",

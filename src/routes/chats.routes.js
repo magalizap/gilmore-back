@@ -1,19 +1,10 @@
 import { Router } from "express";
-import { messageModel } from "../data/models/message.model.js";
-import { logger } from "../middlewares/logger.js";
+import { messagesChat } from "../controllers/messages.controllers.js";
+import { isAuthenticated } from "../middlewares/auth.js";
+
 
 const chatRouter = Router()
 
-chatRouter.get('/chat', async (req, res) => {
-    try {
-        //const message = await messageModel.find()
-        req.io.on('message', (data) => {
-            logger.ingo(data)
-        })
-        res.send('hola')
-    } catch (error) {
-        res.send(error)
-    }
-})
+chatRouter.get('/', isAuthenticated , messagesChat)
 
 export default chatRouter

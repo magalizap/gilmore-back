@@ -1,6 +1,10 @@
-import { productModel } from "../data/models/products.model.js";
+
 import { findAll, findById, createOne, updateOne, deleteOne } from "../services/products.service.js";
 import { v4 as uuidv4 } from 'uuid'; // genera un codigo random
+import CustomError from '../services/custom/customError.js'
+import EErrors from "../services/errors/enum.js";
+import { generateProductErrorInfo } from '../services/errors/info.js'
+import { logger } from "../middlewares/logger.js";
 
 export const findAllProducts = async(req, res) => {
     const { status, limit, page, price } = req.query
@@ -16,11 +20,12 @@ export const findAllProducts = async(req, res) => {
         if(getQuerys){
             res.render('products', { products: getQuerys, style: 'products.css'})
         }else{
-            res.status(200).json({message: 'No products'})
+            res.status(200).send({message: 'No products'})
+
         }
 
     } catch (error) {
-        res.status(500).json({error})
+        res.status(500).send({error: 'error en findAllProducts'})
     }
 }
 
@@ -35,30 +40,37 @@ export const findOneProduct = async (req, res) => {
             res.status(200).json({message: 'No product'})
         }
     } catch (error) {
-        res.status(500).json({error}) 
+        res.status(500).json({error: 'error en findOneProduct'}) 
     }
 }
 
 export const createOneProduct = async (req, res) => {
+
     const { title, description, price, thumbnail, code, stock, status, category } = req.body
 
     if(!title || !description || !price || !thumbnail || !code || !stock || !status || !category){
-        return res.status(400).json({message: 'Missing data'})
+            //return res.status(400).json({message: 'Missing data'})
+         CustomError.createError({
+             name: 'Product creation error',
+             cause: generateProductErrorInfo({title, description,price, thumbnail, code, stock, status, category}),
+             message: 'Error trying to create Product',
+             code: EErrors.INVALID_TYPES_ERROR
+         })
     }
-
-    let ownerEmail
-
-    if (req.user.role === 'Premium'){
-       ownerEmail = req.user.email 
-    }
-
 
     try {
+    
+        let ownerEmail
+    
+        if (req.user.role === 'Premium'){
+           ownerEmail = req.user.email 
+        }
+
         const newProduct = await createOne({title, description, price, thumbnail, code, stock, status, category, owner: ownerEmail})
 
-        res.status(200).json({message: 'Product create', product: newProduct})
+        res.status(200).send({message: 'Product create', product: newProduct})
     } catch (error) {
-        res.status(500).json({error: 'error en createOneProduct'})
+        req.logger.error('Error in createOneProduct')
     }
 }
 
@@ -69,7 +81,7 @@ export const updateOneProduct = async (req, res) => {
     try {
         // Verificar si el usuario es un admin o el dueño del producto
         if (req.user.role === 'Admin' || (req.user.role === 'Premium' && req.user.email === product.owner)){
-            const updateProduct = await updateOne(pid, obj) 
+            await updateOne(pid, obj) 
             res.status(200).json({message: "Product update"})
         }
 
@@ -102,19 +114,21 @@ export const realtimeproducts = async (req, res) => {
     }
 
     try {
-        // mi listado actual de productos
-        const products = await findAll()
+
         req.io.on('connection', async (socket) => {
+
             console.log('Client connected in realtimeproducts')
-            //envío el listado de mis productos
-            socket.emit('allProducts', products.docs)
-            //recibo el nuevo producto creado
-            socket.on('newProduct', (data) => {
-                newData(data)
-            })
-            //cargo la data y la guardo en mi BD
-            const newData = async(data) =>{
-                const newProduct = new productModel({
+            const emitProd = async () => {
+                const products = await findAll()
+                //envío el listado de mis productos
+                socket.emit('server:loadProducts', products.docs)
+
+            }
+           
+            emitProd() // envío mi arreglo de productos
+
+            socket.on('client:newProduct', async (data) => {
+                const newProduct = await createOne({
                     title: data.title, 
                     description: data.description,
                     price: data.price, 
@@ -124,21 +138,35 @@ export const realtimeproducts = async (req, res) => {
                     stock: data.stock, 
                     category: data.category, 
                 })
-                console.log(newProduct)
-                await newProduct.save()
-                //la envío al cliente para visualizarla en tiempo real
-                socket.emit('saveProduct', newProduct)
-            }
+                //const saveProduct = await newProduct.save()
 
-            // falta agregar lógica de actualización y eliminación
+                socket.emit('server:newProduct', newProduct) // envío los datos del nuevo producto creado
+            })
+
+            socket.on('client:deleteProduct', async (pid) => { // elimino el producto seleccionado y actualizo el front
+                await deleteOne(pid)
+                emitProd()
+            })
+
+            socket.on('client:getProduct', async pid => {
+                const product = await findById(pid)
+                socket.emit('server:selectedProduct', product)
+            })
+
+            socket.on('client:updateProduct', async (updateProd) => {
+                await updateOne(updateProd._id, {
+                    title: updateProd.title,
+                    category: updateProd.category, 
+                    price: updateProd.price, 
+                    stock: updateProd.stock, 
+                    description: updateProd.description, 
+                    thumbnail: updateProd.thumbnail
+                })
+                emitProd()
+            })
         
         })
-
-
-
-        res.render('realtimeproducts', {style: 'products.css'})
-
-
+        res.render('realtimeproducts', {style: 'products.css', script: 'main.js'})
     } catch (error) {
         res.status(500).json({error: 'error en realtimeproducts'})
     }

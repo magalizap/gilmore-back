@@ -22,7 +22,7 @@ export default class ProductManager {
 
     async createOne(obj){
         try {
-            const newProduct = await productModel.create([obj])
+            const newProduct = await productModel.create(obj)
             return newProduct
         } catch (error) {
             return error   
