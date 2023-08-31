@@ -5,12 +5,14 @@ import { v4 as uuidv4 } from 'uuid'; // genera un codigo random
 import { findUserByEmail } from "../services/users.service.js";
 
 
+
 export const createOneCart = async (req, res) => {
     try {
         const cart = await createOne([{products:[]}])
-        res.status(200).json(cart)
+        res.status(200).send(cart)
     } catch (error) {
-        res.status(500).json({error})
+        req.logger.error('Error in createOneCart')
+        res.status(500).json({error: error})
     }
 }
 
@@ -20,7 +22,8 @@ export const findById = async (req, res) => {
         const cartId = await findOneById({_id: cid})
         res.status(200).json({message: 'Product found', cartId})
     } catch (error) {
-        res.status(500).json({error})
+        req.logger.error('Error in findById')
+        res.status(500).json({error: error})
     }
 }
 
@@ -46,7 +49,8 @@ export const addProduct = async (req, res) => {
         await cart.save()
         res.status(200).json(cart)
     } catch (error) {
-        res.status(500).json({error: 'error en addProduct'})
+        req.logger.error('Error in addProduct')
+        res.status(500).json({error: error})
     }
 }
 
@@ -60,7 +64,8 @@ export const deleteOneProduct = async (req, res) => {
         res.status(200).json({cart: cart})
 
     } catch (error) {
-        res.status(500).json({error})
+        req.logger.error('Error in deleteOneProduct')
+        res.status(500).json({error: error})
     }
 }
 
@@ -73,7 +78,8 @@ export const deleteOneCart = async (req, res) => {
         res.status(200).json({cart: emptyCart})
 
     } catch (error) {
-        res.status(500).json({error})
+        req.logger.error('Error in deleteOneCart')
+        res.status(500).json({error: error})
     }
 }
 
@@ -89,7 +95,8 @@ export const updateOneCart = async (req, res) => {
         const updateCart = await updateOne({_id: cid}, {products: arrayProducts})
         res.status(200).json({cart: updateCart})
     } catch (error) {
-        res.status(500).json({error})
+        req.logger.error('Error in updateOneCart')
+        res.status(500).json({error: error})
     }
 }
 
@@ -102,7 +109,8 @@ export const updateOneProduct = async (req, res) => {
         cart.products = {products: [{id_prod: pid, quantity: quantity}]}
         res.status(200).json({cart: cart})
     } catch (error) {
-        res.status(500).json({error})
+        req.logger.error('Error in updateOneProduct ')
+        res.status(500).json({error: error})
     }
 }
 
@@ -157,7 +165,8 @@ export const purchaseCart = async (req, res) => {
         
 
     } catch (error) {
-        res.status(500).json({error})
+        req.logger.error('Error in purchaseCart ')
+        res.status(500).json({error: error})
     }
 
 }

@@ -10,5 +10,5 @@ export const generateProductErrorInfo = (prod) => {
         `*stock: needs to be Number, received ${prod.stock}\n` +
         `*status: needs to be a Boolean, received ${prod.status}\n` +
         `*category: needs to be String, received ${prod.category}\n`
-    );
-};
+    )
+}

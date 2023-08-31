@@ -41,3 +41,11 @@ export const findUserToUpdate = async (tokenPass, timeToExpiredPass) => {
     }
 }
 
+export const createUser = async (obj) => {
+    try {
+        const user = await usersManager.createOne(obj)
+        return user
+    } catch (error) {
+        return error
+    }
+}

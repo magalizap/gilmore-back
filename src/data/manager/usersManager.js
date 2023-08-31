@@ -38,4 +38,13 @@ export default class UsersManager {
             return error
         }
     }
+
+    async createOne(obj){
+        try {
+            const user = await userModel.create(obj)
+            return user
+        } catch (error) {
+            return error
+        }
+    }
 }

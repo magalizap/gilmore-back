@@ -4,8 +4,9 @@ import { Command } from 'commander'
 const program = new Command()
 
 program
-.option('-m, --mode <mode>', 'ambiente de desarrollo', 'dev')
-
+.option('-m, --mode <mode>', 'development environment', 'dev')
+.option('-f, --file <file>', 'the file to read')
+.option('-t --timeout <timeout>', 'the timeout to read')
 
 program.parse()
 

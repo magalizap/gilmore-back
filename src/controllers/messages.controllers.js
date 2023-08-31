@@ -24,7 +24,8 @@ export const messagesChat = async (req, res) => {
         })
         res.render('chat', { style: 'chat.css', script:'chat.js', user})
     } catch (error) {
-        res.status(500).json({error: 'error en messagesChat'})
+        req.logger.error('Error in messagesChat')
+        res.status(500).json({error: error})
     }
 }
 

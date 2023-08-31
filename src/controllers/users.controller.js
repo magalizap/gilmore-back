@@ -1,22 +1,42 @@
 
-import UserDB from "../data/dto/userdb.js"
+import UserDB from "../data/dto/user.dto.js"
+//import jwt from "jsonwebtoken"
 import { logger } from "../middlewares/logger.js"
-import { findUserByEmail, findUserById, findUserByToken, findUserToUpdate } from "../services/users.service.js"
+import { createUser, findUserByEmail, findUserById, findUserByToken, findUserToUpdate } from "../services/users.service.js"
 import crypto from 'crypto'
 import { transporter } from "../utils/nodemailer.js"
-import { hashData } from "../utils/bcrypt.js"
+import { hashData, compareData } from "../utils/bcrypt.js"
+import config from "../config/envConfig.js"
 
 export const findUsers = async (req, res, next) => {
     try {
-        const payload = new UserDB(req.user)
-        if(payload){
+        //const payload = new UserDB(req.user)
+        const payload = UserDB.getUserTokenFrom(req.user)
+
+        if(config.node_env === 'prod'){
+            if(payload){
+                res.render('profile', {payload, style: 'profile.css'})
+            }else {
+                res.redirect('/api/users/login')
+            }
+        }else if(config.node_env === 'dev'){
+            if(payload){
+                res.status(200).send({payload})
+            }else if(!payload){
+                res.status(404).send({status:"error",error:"User doesn't exist"})
+            }
+        }
+
+
+
+        /*if(payload){
             res.render('profile', {payload, style: 'profile.css'})
         }else {
             res.redirect('/api/users/login')
-        }
+        }*/
 
     } catch (error) {
-        res.status(500).json({error: error})
+        res.status(500).send({status:"error"})
         logger.error('error en findUsers')
     }
 }
@@ -30,18 +50,58 @@ export const destroySession = async (req, res) => {
         }
        
     } catch (error) {
-        res.status(500).json({error: 'error en destroySession'})
+        req.logger.error('Error in destroySession')
+        res.status(500).json({error: error})
     }
 }
-
+/*
 export const signupUser = async (req, res) => {
     try {
-        const user = await findUserByEmail(email)
-        req.session.user = user
+        const { first_name, last_name, email, password, age, role } = req.body
+        if (!first_name || !last_name || !email || !password) return res.status(400).send({ status: "error", error: "Incomplete values" })
+        const exists = await findUserByEmail(email)
+        if (exists) return res.status(400).send({ status: "error", error: "User already exists" })
+        const hashedPassword = await hashData(password)
+        const user = {
+            first_name,
+            last_name,
+            email,
+            password: hashedPassword,
+            age,
+            role
+        }
+        let result = await createUser(user)
+        console.log(result)
+        
+        res.send({ status: "success", payload: result._id })
     } catch (error) {
         res.status(500).json({error: 'error en signupUser'})
     }
 }
+
+export const loginUser = async (req, res) => {
+    const { email, password } = req.body
+    if (!email || !password) return res.status(400).send({ status: "error", error: "Incomplete values" })
+    const user = await findUserByEmail(email)
+    if(!user) return res.status(404).send({status:"error",error:"User doesn't exist"})
+
+    const isValidPassword = await compareData(password, user.password)
+    if(!isValidPassword) return res.status(400).send({status:"error",error:"Incorrect password"})
+
+    const userDto = UserDB.getUserTokenFrom(user)
+    console.log(userDto)
+    const token = jwt.sign(userDto,'tokenSecretJWT',{expiresIn:"1h"})
+
+    /*if(config.node_env === 'dev'){
+        res.cookie('coderCookie', token, {maxAge:3600000}).send({status:"success",message:"Logged in"})
+    }else {
+        res.cookie('coderCookie', token, {maxAge:3600000}).redirect('/api/products') // Redirección en producción
+    }
+
+    res.cookie('coderCookie', token, {maxAge:3600000}).send({status:"success",message:"Logged in"})
+    
+}*/
+
 
 export const restorePass = async (req, res) => {
     try {
@@ -70,7 +130,8 @@ export const restorePass = async (req, res) => {
         res.redirect('/api/users/login')
 
     } catch (error) {
-        res.status(500).json({error: 'error en restorePass'})
+        req.logger.error('Error in restorePass')
+        res.status(500).json({error: error})
     }
 }
 
@@ -84,7 +145,8 @@ export const validateToken = async (req, res) => {
         res.render('restorePass', {tokenPass, style: 'login.css'})
 
     } catch (error) {
-        res.status(500).json({error: 'error en validateToken'})
+        req.logger.error('Error in validateToken')
+        res.status(500).json({error: error})
     }
 }
 
@@ -115,7 +177,8 @@ export const updatePass = async (req, res) => {
 
 
     } catch (error) {
-        res.status(500).json({error: 'error en updatePass'})
+        req.logger.error('Error in updatePass')
+        res.status(500).json({error: error})
     }
 }
 
@@ -134,6 +197,7 @@ export const changeRol = async (req, res) => {
         res.status(200).json({ message: 'Rol del usuario actualizado exitosamente'})
 
     } catch (error) {
-        res.status(500).json({error: 'error en changeRol'})
+        req.logger.error('Error in changeRol')
+        res.status(500).json({error: error})
     }
 }

@@ -22,7 +22,7 @@ import errorHandler from './middlewares/errors/index.js'
 
 
 // Config
-const app = express()
+export const app = express()
 const PORT = config.port || 8080
 const server = app.listen(PORT, () => {
     logger.info(`🚀 Server listening on port: ${PORT}`)

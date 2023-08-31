@@ -4,7 +4,7 @@ import { v4 as uuidv4 } from 'uuid'; // genera un codigo random
 import CustomError from '../services/custom/customError.js'
 import EErrors from "../services/errors/enum.js";
 import { generateProductErrorInfo } from '../services/errors/info.js'
-import { logger } from "../middlewares/logger.js";
+
 
 export const findAllProducts = async(req, res) => {
     const { status, limit, page, price } = req.query
@@ -25,7 +25,8 @@ export const findAllProducts = async(req, res) => {
         }
 
     } catch (error) {
-        res.status(500).send({error: 'error en findAllProducts'})
+        req.logger.error('Error in findAllProducts')
+        res.status(500).json({error: error})
     }
 }
 
@@ -40,25 +41,26 @@ export const findOneProduct = async (req, res) => {
             res.status(200).json({message: 'No product'})
         }
     } catch (error) {
-        res.status(500).json({error: 'error en findOneProduct'}) 
+        req.logger.error('Error in findOneProduct')
+        res.status(500).json({error: error})
     }
 }
 
-export const createOneProduct = async (req, res) => {
-
-    const { title, description, price, thumbnail, code, stock, status, category } = req.body
-
-    if(!title || !description || !price || !thumbnail || !code || !stock || !status || !category){
-            //return res.status(400).json({message: 'Missing data'})
-         CustomError.createError({
-             name: 'Product creation error',
-             cause: generateProductErrorInfo({title, description,price, thumbnail, code, stock, status, category}),
-             message: 'Error trying to create Product',
-             code: EErrors.INVALID_TYPES_ERROR
-         })
-    }
+export const createOneProduct = async (req, res, next) => {
 
     try {
+
+        const { title, description, price, thumbnail, code, stock, status, category } = req.body
+
+        if(!title || !description || !price || !thumbnail || !code || !stock || !status || !category){
+            //return res.status(400).json({message: 'Missing data'})
+            CustomError.createError({
+                name: 'Product creation error',
+                cause: generateProductErrorInfo(req.body),
+                message: 'Error trying to create Product',
+                code: EErrors.INVALID_TYPES_ERROR
+            })
+        }
     
         let ownerEmail
     
@@ -69,8 +71,10 @@ export const createOneProduct = async (req, res) => {
         const newProduct = await createOne({title, description, price, thumbnail, code, stock, status, category, owner: ownerEmail})
 
         res.status(200).send({message: 'Product create', product: newProduct})
+
     } catch (error) {
         req.logger.error('Error in createOneProduct')
+        next(error)
     }
 }
 
@@ -82,11 +86,12 @@ export const updateOneProduct = async (req, res) => {
         // Verificar si el usuario es un admin o el dueño del producto
         if (req.user.role === 'Admin' || (req.user.role === 'Premium' && req.user.email === product.owner)){
             await updateOne(pid, obj) 
-            res.status(200).json({message: "Product update"})
+            res.status(200).send({message: "Product update"})
         }
 
     } catch (error) {
-        res.status(500).json({error: 'error en updateOneProduct'})
+        req.logger.error('Error in updateOneProduct')
+        res.status(500).json({error: error})
     }
 }
 
@@ -101,7 +106,8 @@ export const deleteOneProduct = async (req, res) => {
         }
         
     } catch (error) {
-        res.status(500).json({error: 'error en deleteOneProduct'})
+        req.logger.error('Error in deleteOneProduct')
+        res.status(500).json({error: error})
     }
 }
 
@@ -168,6 +174,7 @@ export const realtimeproducts = async (req, res) => {
         })
         res.render('realtimeproducts', {style: 'products.css', script: 'main.js'})
     } catch (error) {
-        res.status(500).json({error: 'error en realtimeproducts'})
+        req.logger.error('Error in realtimeproducts')
+        res.status(500).json({error: error})
     }
 }
