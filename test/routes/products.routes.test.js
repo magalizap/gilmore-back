@@ -6,7 +6,7 @@ import { authenticateUser } from "../utils/testAuth.test.js";
 
 
 
-const PORT = config.port
+//const PORT = config.port
 //const requester = supertest(`http://localhost:${PORT}`)
 
 describe('Test routes Products', () => {
@@ -14,26 +14,23 @@ describe('Test routes Products', () => {
         await dropProduct()
     })
 
+    const mockProduct = {
+        title: 'Sandalia Camelia',
+        description: 'Sandalia de ecocuero - base atideslizante',
+        price: 10990,
+        thumbnail: [],
+        code: 'h3U7vDxg1Y09R2w2ubtc',
+        stock: 16,
+        status: true,
+        category: 'calzado'
+    }
+
     it('[POST] /api/products creation successfully', async () => {
     
         const agent = await authenticateUser('Admin')
-
-        const mockProduct = {
-            title: 'Sandalia Camelia',
-            description: 'Sandalia de ecocuero - base atideslizante',
-            price: 10990,
-            thumbnail: [],
-            code: 'h3U7vDxg1Y09R2w2ubtc',
-            stock: 16,
-            status: true,
-            category: 'calzado'
-        }
-
         const response = await agent.post('/api/products').send(mockProduct)
         
-        
         expect(response.statusCode).to.be.eql(200)
-       
         expect(response.body.product.title).to.be.eql('Sandalia Camelia')
         expect(response.body.product.title)
 
@@ -43,14 +40,15 @@ describe('Test routes Products', () => {
     it('[GET] /api/products find products successfully', async() => {
         const agent = await authenticateUser('Admin')
         const response = await agent.get('/api/products')
+
         expect(response.statusCode).to.be.eql(200)
         expect(response.text).to.be.ok
     })
 
     it('[PUT] /api/products/:pid update products successfully', async () => {
         const agent = await authenticateUser('Admin')
-
-        const {pid} = '64eff1999c651b1bafed1444'
+        const responseCreate = await agent.post('/api/products').send(mockProduct)
+        const newProductId = responseCreate.body.product._id;
 
         const mockUpdateProduct = {
             title: 'Sandalia Camelia',
@@ -58,13 +56,12 @@ describe('Test routes Products', () => {
             price: 10990,
             thumbnail: [],
             code: 'h3U7vDxg1Y09R2w2ubtc',
-            stock: 5,
+            stock: 5, // updated
             status: true,
             category: 'calzado'
-        };
+        }
 
-        const response = await agent.put(`/api/products/${pid}`).send(mockUpdateProduct)
-        //console.log(response.body)
+        const response = await agent.put(`/api/products/${newProductId}`).send(mockUpdateProduct)
         expect(response.statusCode).to.be.eql(200)
     })
 

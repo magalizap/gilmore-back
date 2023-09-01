@@ -13,7 +13,7 @@ import { app } from '../../src/index.js';
 }*/
 
 export const authenticateUser = async (role) => {
-  const agent = supertest.agent(app);
+  const agent = supertest.agent(app)
 
   // Autenticar al usuario según el rol
   const userCredentials = {
@@ -22,13 +22,13 @@ export const authenticateUser = async (role) => {
   };
 
   if (role === 'Admin') {
-    userCredentials.email = 'admin@test.com'; // Cambiar a las credenciales de un admin
+    userCredentials.email = 'admin@test.com' // Cambiar a las credenciales de un admin
   } else if (role === 'Premium') {
-    userCredentials.email = 'premium@test.com'; // Cambiar a las credenciales de un premium
+    userCredentials.email = 'premium@test.com' // Cambiar a las credenciales de un premium
   }
 
-  await agent.post('/api/sessions/login').send(userCredentials);
+  await agent.post('/api/sessions/login').send(userCredentials)
 
-  return agent;
-};
+  return agent
+}
 

@@ -170,6 +170,10 @@ export const realtimeproducts = async (req, res) => {
                 })
                 emitProd()
             })
+
+            socket.on("disconnect", async () => {
+                console.log(socket.id, "disconnected")
+            })
         
         })
         res.render('realtimeproducts', {style: 'products.css', script: 'main.js'})

@@ -12,29 +12,32 @@ describe('Test routes Cart', () => {
         await dropCart()
     })
 
+    const cart = [{
+        products: []
+    }]
+
     it('[POST] /api/cart/ create initially cart', async () => {
-
-        const cart = [{
-            products: []
-        }]
-
-       
         const response = await requester.post('/api/cart').send(cart)
         expect(response.statusCode).to.be.eql(200)
         expect(response.body).to.be.ok
     })
 
     it('[GET] /api/cart/:cid find cart by id', async () => {
-        const cid = '64efeb5367a80c6f812477c8'
-
+        const responseCreate = await requester.post('/api/cart').send(cart)
+        const array = responseCreate.body
+        const obj = array[0]
+        const cid = (obj._id)
         const response = await requester.get(`/api/cart/${cid}`)
         expect(response.statusCode).to.be.eql(200)
         expect(response.body).to.be.ok
     })
 
-    it('[DELETE] /api/cart/:cid delete cart', async () => {
-        const cid = '64efeb5367a80c6f812477c8'
-        const response = await requester.get(`/api/cart/${cid}`)
+    it('[DELETE] /api/cart/:cid   delete one cart', async () => {
+        const responseCreate = await requester.post('/api/cart').send(cart)
+        const array = responseCreate.body
+        const obj = array[0]
+        const cid = (obj._id)
+        const response = await requester.delete(`/api/cart/${cid}`)
         expect(response.statusCode).to.be.eql(200)
         expect(response.body).to.be.ok
     })

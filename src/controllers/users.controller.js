@@ -2,7 +2,7 @@
 import UserDB from "../data/dto/user.dto.js"
 //import jwt from "jsonwebtoken"
 import { logger } from "../middlewares/logger.js"
-import { createUser, findUserByEmail, findUserById, findUserByToken, findUserToUpdate } from "../services/users.service.js"
+import { findUserByEmail, findUserById, findUserByToken, findUserToUpdate } from "../services/users.service.js"
 import crypto from 'crypto'
 import { transporter } from "../utils/nodemailer.js"
 import { hashData, compareData } from "../utils/bcrypt.js"
@@ -26,8 +26,6 @@ export const findUsers = async (req, res, next) => {
                 res.status(404).send({status:"error",error:"User doesn't exist"})
             }
         }
-
-
 
         /*if(payload){
             res.render('profile', {payload, style: 'profile.css'})
@@ -54,6 +52,40 @@ export const destroySession = async (req, res) => {
         res.status(500).json({error: error})
     }
 }
+
+export const signupUser = async (req, res) => {
+    try {
+        const {email} = req.body
+        if(config.node_env === 'dev'){
+            const user = await findUserByEmail(email)
+            req.session.user = user
+            res.send({payload: user._id})
+        }else {
+            res.redirect('/api/products')
+        }
+    } catch (error) {
+        req.logger.error('Error in signupUser')
+        res.status(500).json({error: error})
+    }
+}
+
+export const loginUser = async (req, res) => {
+    try {
+        const {email} = req.body
+        if(config.node_env === 'dev'){
+            const user = await findUserByEmail(email)
+            req.session.user = user
+            res.send({payload: user._id})
+        }else {
+            res.redirect('/api/products')
+        }
+    } catch (error) {
+        req.logger.error('Error in loginUser')
+        res.status(500).json({error: error})
+    }
+}
+
+
 /*
 export const signupUser = async (req, res) => {
     try {

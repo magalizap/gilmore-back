@@ -1,9 +1,9 @@
 import { Router } from "express";
 import passport from "passport";
-import { findUsers, destroySession, restorePass, updatePass } from "../controllers/users.controller.js";
-import { userModel } from "../data/models/users.model.js";
+import { findUsers, destroySession, restorePass, updatePass, signupUser, loginUser } from "../controllers/users.controller.js";
+//import { userModel } from "../data/models/users.model.js";
 import { isAuthenticated } from "../middlewares/auth.js";
-import config from "../config/envConfig.js";
+//import config from "../config/envConfig.js";
 
 
 const sessionRouter = Router()
@@ -11,33 +11,9 @@ const sessionRouter = Router()
 
 // PASSPORT LOCAL
 
-sessionRouter.post('/signup', passport.authenticate('signup', {
-    //ailureRedirect: '/api/sessions/errorLogin',
-    //successRedirect: '/api/products'
-}), async(req, res) => {
-    const {email} = req.body
-    if(config.node_env === 'dev'){
-        const user = await userModel.findOne({email: email})
-        req.session.user = user
-        res.send({payload: user._id})
-    }else {
-        res.redirect('/api/products')
-    }
-})
+sessionRouter.post('/signup', passport.authenticate('signup'), signupUser)
 
-sessionRouter.post('/login', passport.authenticate('login', {
-    //ailureRedirect: '/api/sessions/errorLogin',
-    //successRedirect: '/api/products'
-}), async(req, res) => {
-    const {email} = req.body
-    if(config.node_env === 'dev'){
-        const user = await userModel.findOne({email: email})
-        req.session.user = user
-        res.send({payload: user._id})
-    }else {
-        res.redirect('/api/products')
-    }
-})
+sessionRouter.post('/login', passport.authenticate('login'), loginUser)
 
 
 /*

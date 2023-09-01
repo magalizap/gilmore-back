@@ -23,17 +23,54 @@ describe('Test routes sessions', () => {
             first_name: 'Usuario',
             last_name: 'Test',
             age: 20,
+            email: 'user@test.com',
+            password: '123456',
+            role: 'User'
+            
+        }
+
+        const response = await requester.post('/api/sessions/signup').send(mockUser)
+        expect(response.statusCode).to.be.eql(200)
+        expect(response.body.payload).to.be.ok
+    })
+
+    it('[POST] /api/sessions/signup  signup successfully', async () => {
+
+        const mockUserAdmin = {
+            
+            first_name: 'Usuario',
+            last_name: 'Test',
+            age: 20,
             email: 'admin@test.com',
             password: '123456',
             role: 'Admin'
             
         }
 
-        const response = await requester.post('/api/sessions/signup').send(mockUser)
-        //console.log(response.statusCode)
+        const response = await requester.post('/api/sessions/signup').send(mockUserAdmin)
         expect(response.statusCode).to.be.eql(200)
         expect(response.body.payload).to.be.ok
     })
+
+    it('[POST] /api/sessions/signup  signup successfully', async () => {
+
+        const mockUserPremium = {
+            
+            first_name: 'Usuario',
+            last_name: 'Test',
+            age: 20,
+            email: 'premium@test.com',
+            password: '123456',
+            role: 'Premium'
+            
+        }
+
+        const response = await requester.post('/api/sessions/signup').send(mockUserPremium)
+        expect(response.statusCode).to.be.eql(200)
+        expect(response.body.payload).to.be.ok
+    })
+
+
 
 
     it('[POST] /api/sessions/login login successfully', async () => {
@@ -41,13 +78,14 @@ describe('Test routes sessions', () => {
             email: 'admin@test.com',
             password: '123456',
         };
-        const response = await requester.post('/api/sessions/login').send(mockUser);
+        const response = await requester.post('/api/sessions/login').send(mockUser)
 
-        expect(response.statusCode).to.be.eql(200);
-        expect(response.body.payload).to.be.ok;
+        expect(response.statusCode).to.be.eql(200)
+        expect(response.body.payload).to.be.ok
     })
 
     it('[POST] /api/sessions/login status 401', async() => {
+
         const mockUser = {
             email: 'email@invalid.com',
             password: '1234',
@@ -58,9 +96,7 @@ describe('Test routes sessions', () => {
         expect(response.body.payload).not.to.be.ok
     })
 
-
     it('[GET] /api/sessions/current session profile', async () => {
-        //const agent = await authenticateUser()
         const agent = await authenticateUser('Admin')
         const response = await agent.get('/api/sessions/current')
 
