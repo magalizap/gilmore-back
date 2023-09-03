@@ -5,9 +5,6 @@ import { authAdminOrUserPremium, isAuthenticated } from "../middlewares/auth.js"
 
 const productRouter = Router()
 
-// realtimeproducts
-productRouter.get('/realtimeproducts', authAdminOrUserPremium ,realtimeproducts)
-
 // all users
 productRouter.get('/', isAuthenticated ,findAllProducts)
 productRouter.get('/:pid', isAuthenticated, findOneProduct)

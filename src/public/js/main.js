@@ -10,6 +10,3 @@ loadProducts(renderProducts) // cargo y muestro mi listado de productos
 onSelectedProduct(fillForm) // relleno el formulario con la data del producto a actualizar
 
 formProduct.addEventListener('submit', onHandleSubmit)
-
-
-

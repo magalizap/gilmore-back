@@ -13,6 +13,7 @@ export const isAuthenticated = (req, res, next) => {
         res.locals.isPremium = false
     }
 
+
     next();
 }
 

@@ -2,7 +2,7 @@ import { expect } from "chai";
 import supertest from "supertest";
 import config from '../../src/config/envConfig.js'
 import { dropCart } from "../setup.test.js";
-import { authenticateUser } from '../utils/testAuth.test.js'
+import { authenticateUser } from '../auth/testAuth.test.js'
 
 const PORT = config.port
 const requester = supertest(`http://localhost:${PORT}`)

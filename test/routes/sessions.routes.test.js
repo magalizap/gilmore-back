@@ -2,7 +2,7 @@ import config from '../../src/config/envConfig.js'
 import { expect } from "chai";
 import supertest from "supertest";
 import { dropUser } from "../setup.test.js";
-import { authenticateUser } from '../utils/testAuth.test.js';
+import { authenticateUser } from '../auth/testAuth.test.js';
 
 
 

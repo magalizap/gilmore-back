@@ -4,7 +4,7 @@ import UserDB from "../data/dto/user.dto.js"
 import { logger } from "../middlewares/logger.js"
 import { findUserByEmail, findUserById, findUserByToken, findUserToUpdate } from "../services/users.service.js"
 import crypto from 'crypto'
-import { transporter } from "../utils/nodemailer.js"
+import { transporter } from "../helpers/nodemailer.js"
 import { hashData, compareData } from "../utils/bcrypt.js"
 import config from "../config/envConfig.js"
 

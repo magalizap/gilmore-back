@@ -10,15 +10,15 @@ import productRouter from './routes/products.routes.js'
 import userRouter from './routes/users.routes.js'
 import sessionsRoutes from './routes/sessions.routes.js'
 import cartRouter from './routes/carts.routes.js'
-import chatRouter from './routes/chats.routes.js'
 import { __dirname } from './utils/path.js'
 import { addLogger, logger} from './middlewares/logger.js'
 import { engine } from 'express-handlebars'
 import * as path from 'path'
 import { Server } from 'socket.io'
-import { swaggerServe, swaggerSetup } from './utils/swagger.js'
+import { swaggerServe, swaggerSetup } from './helpers/swagger.js'
 import errorHandler from './middlewares/errors/index.js'
-
+import sockets from './utils/sockets.js'
+import viewRouter from './routes/views.routes.js'
 
 
 // Config
@@ -73,18 +73,14 @@ app.use((req, res, next) => {
 
 // ServerIO
 const io = new Server(server, {cors: {origin: '*'}}) 
-
-app.use((req, res, next) => { // acceso a io en mis rutas
-    req.io = io    
-    return next()
-})
+sockets(io)
 
 // Routes
 app.use('/api/products', productRouter)
 app.use('/api/users', userRouter)
+app.use('/', viewRouter)
 app.use('/api/sessions', sessionsRoutes)
 app.use('/api/cart', cartRouter)
-app.use('/chat' , chatRouter)
 app.use('/api/docs', swaggerServe, swaggerSetup)
 
 

@@ -4,6 +4,15 @@ import { messageModel } from "../models/messages.model.js";
 
 export default class MessageManager {
 
+    async findById(){
+        try {
+            const messages = await messageModel.findById()
+            return messages
+        } catch (error) {
+            return error
+        }
+    }
+
     async findAll(){
         try {
             const messages = await messageModel.find()

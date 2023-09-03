@@ -35,18 +35,36 @@ const messageBox = document.getElementById('message')
 const chat = document.getElementById('chat')
 const usernames = document.getElementById('usernames')
 
+const user = usernames.textContent
+
 // envío mensaje al servidor
 messagesForm.addEventListener('submit', (e) => {
     e.preventDefault()
-    socket.emit('client:sendMessage', messageBox.value)
+    socket.emit('client:sendMessage', {
+        msg: messageBox.value,
+        user: user
+    })
     messageBox.value = ''
 })
 
-//recibo respuesta del servidor
-socket.on('server:newMessage', async (data) => {
-    const div = document.createElement('div')
-    div.classList.add('msg-area', 'mb-2')
-    div.innerHTML = `<p class=msg><b>${data.user}:</b> ${data.msg}</p>`
-    chat.appendChild(div)
+
+// Función para agregar un mensaje al chat
+const addMessage = (user, msg) => {
+  const div = document.createElement('div')
+  div.classList.add('msg-area', 'mb-2')
+  div.innerHTML = `<p class="msg"><b>${user}:</b> ${msg}</p>`
+  chat.appendChild(div)
+}
+
+// Recibir mensajes previos del servidor
+socket.on('server:loadMessages', (data) => {
+  data.forEach((mensaje) => {
+    addMessage(mensaje.user, mensaje.message)
+  })
+})
+
+// Recibir un nuevo mensaje del servidor
+socket.on('server:newMessage', (data) => {
+    addMessage(data.user, data.msg)
 })
 
