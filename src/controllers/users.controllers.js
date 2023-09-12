@@ -1,46 +1,42 @@
 
 import UserDB from "../data/dto/user.dto.js"
 //import jwt from "jsonwebtoken"
-import { logger } from "../middlewares/logger.js"
-import { findUserByEmail, findUserById, findUserByToken, findUserToUpdate } from "../services/users.service.js"
+import { findUserByEmail, findUserById, findUserByToken, findUserToUpdate, updateUser } from "../services/users.service.js"
 import crypto from 'crypto'
 import { transporter } from "../helpers/nodemailer.js"
 import { hashData, compareData } from "../utils/bcrypt.js"
-import config from "../config/envConfig.js"
+import config from "../config/env.config.js"
 
 export const findUsers = async (req, res, next) => {
     try {
         //const payload = new UserDB(req.user)
         const payload = UserDB.getUserTokenFrom(req.user)
 
-        if(config.node_env === 'prod'){
-            if(payload){
-                res.render('profile', {payload, style: 'profile.css'})
-            }else {
-                res.redirect('/api/users/login')
-            }
-        }else if(config.node_env === 'dev'){
+        if(config.node_env === 'test'){
             if(payload){
                 res.status(200).send({payload})
             }else if(!payload){
                 res.status(404).send({status:"error",error:"User doesn't exist"})
             }
-        }
-
-        /*if(payload){
-            res.render('profile', {payload, style: 'profile.css'})
         }else {
-            res.redirect('/api/users/login')
-        }*/
+            if(payload){
+                res.render('profile', {payload, style: 'profile.css'})
+            }else {
+                res.redirect('/api/users/login')
+            }
+        }
 
     } catch (error) {
         res.status(500).send({status:"error"})
-        logger.error('error en findUsers')
+        req.logger.error('error en findUsers')
     }
 }
 
 export const destroySession = async (req, res) => {
     try {
+       const user = req.user
+       user.last_connection = Date.now()
+       user.save()
         if(req.session.destroy){
             req.session.destroy(() => {
                 res.redirect('/api/users/login')
@@ -56,15 +52,17 @@ export const destroySession = async (req, res) => {
 export const signupUser = async (req, res) => {
     try {
         const {email} = req.body
-        if(config.node_env === 'dev'){
-            const user = await findUserByEmail(email)
-            req.session.user = user
+        const user = await findUserByEmail(email)
+        req.session.user = user
+        if(config.node_env === 'test'){
             res.send({payload: user._id})
         }else {
+            req.flash('success-msg', `Bienvenido/a ${user.first_name}!`)
             res.redirect('/api/products')
         }
     } catch (error) {
         req.logger.error('Error in signupUser')
+
         res.status(500).json({error: error})
     }
 }
@@ -72,67 +70,22 @@ export const signupUser = async (req, res) => {
 export const loginUser = async (req, res) => {
     try {
         const {email} = req.body
-        if(config.node_env === 'dev'){
-            const user = await findUserByEmail(email)
-            req.session.user = user
+        const user = await findUserByEmail(email)
+        req.session.user = user
+        user.last_connection = Date.now()
+        user.save()
+        if(config.node_env === 'test'){
             res.send({payload: user._id})
         }else {
+            req.flash('success-msg', `Bienvenido/a ${user.first_name}!`)
             res.redirect('/api/products')
         }
+        
     } catch (error) {
         req.logger.error('Error in loginUser')
         res.status(500).json({error: error})
     }
 }
-
-
-/*
-export const signupUser = async (req, res) => {
-    try {
-        const { first_name, last_name, email, password, age, role } = req.body
-        if (!first_name || !last_name || !email || !password) return res.status(400).send({ status: "error", error: "Incomplete values" })
-        const exists = await findUserByEmail(email)
-        if (exists) return res.status(400).send({ status: "error", error: "User already exists" })
-        const hashedPassword = await hashData(password)
-        const user = {
-            first_name,
-            last_name,
-            email,
-            password: hashedPassword,
-            age,
-            role
-        }
-        let result = await createUser(user)
-        console.log(result)
-        
-        res.send({ status: "success", payload: result._id })
-    } catch (error) {
-        res.status(500).json({error: 'error en signupUser'})
-    }
-}
-
-export const loginUser = async (req, res) => {
-    const { email, password } = req.body
-    if (!email || !password) return res.status(400).send({ status: "error", error: "Incomplete values" })
-    const user = await findUserByEmail(email)
-    if(!user) return res.status(404).send({status:"error",error:"User doesn't exist"})
-
-    const isValidPassword = await compareData(password, user.password)
-    if(!isValidPassword) return res.status(400).send({status:"error",error:"Incorrect password"})
-
-    const userDto = UserDB.getUserTokenFrom(user)
-    console.log(userDto)
-    const token = jwt.sign(userDto,'tokenSecretJWT',{expiresIn:"1h"})
-
-    /*if(config.node_env === 'dev'){
-        res.cookie('coderCookie', token, {maxAge:3600000}).send({status:"success",message:"Logged in"})
-    }else {
-        res.cookie('coderCookie', token, {maxAge:3600000}).redirect('/api/products') // Redirección en producción
-    }
-
-    res.cookie('coderCookie', token, {maxAge:3600000}).send({status:"success",message:"Logged in"})
-    
-}*/
 
 
 export const restorePass = async (req, res) => {
@@ -158,7 +111,8 @@ export const restorePass = async (req, res) => {
             html: `<h2>¡Hola, ${email}!</h2> <p>Para reestablecer su contraseña, haga click <a href=${resetUrl}>aqui</a></p>`
         })
         console.log(resetUrl)
-        logger.info('Todo ok! revisa la casilla de correo')
+        req.logger.info('Todo ok! revisa la casilla de correo')
+        req.flash('success-msg', 'Revisa tu casilla de correo')
         res.redirect('/api/users/login')
 
     } catch (error) {
@@ -204,7 +158,7 @@ export const updatePass = async (req, res) => {
         
         user.password = hashNewPass
         await user.save()
-        logger.info('todo increíblemente ok')
+        req.logger.info('todo increíblemente ok')
         res.redirect('/api/users/login')
 
 
@@ -222,14 +176,42 @@ export const changeRol = async (req, res) => {
             return res.status(404).json({ message: 'Usuario no encontrado' })
         }
 
-        // Cambiar el rol del usuario
-        user.role = user.role === 'User' ? 'Premium' : 'User'
-        await user.save()
+        // si mi usuario subió los 3 documentos requeridos
+        if(user.documents.length === 3){
+            // Cambio a user premium
+            await updateUser({ _id: uid }, { role: 'Premium' }, { new: true })
+        }else {
+            return res.status(404).json({ message: 'No has llenado todos los campos' })
+        }
 
         res.status(200).json({ message: 'Rol del usuario actualizado exitosamente'})
 
     } catch (error) {
         req.logger.error('Error in changeRol')
         res.status(500).json({error: error})
+    }
+}
+
+export const uploads = async (req, res) => {
+    try {
+
+        const uid = req.params.uid
+        const payload = await findUserById(uid)
+
+        for (const uploadedFile of req.files){
+            const { originalname, path } = uploadedFile
+            const index = path.indexOf('/upload') !== -1 ? path.indexOf('/upload') : path.indexOf('\\upload');
+            const newPath = path.substring(index)
+
+            const saveDocs = { name: originalname, reference: newPath }
+            payload.documents.push(saveDocs)
+            await payload.save()
+        }
+        
+        res.redirect('/api/sessions/current')
+        
+    } catch (error) {
+        req.logger.error('Error in uploads')
+        res.status(500).json({ error: error })
     }
 }

@@ -1,4 +1,4 @@
-import MessageManager from "../data/manager/messagesManager.js";
+import MessageManager from "../data/manager/messages.manager.js";
 
 const messageManager = new MessageManager()
 

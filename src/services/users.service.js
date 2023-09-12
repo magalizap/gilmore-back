@@ -1,4 +1,4 @@
-import UsersManager from "../data/manager/usersManager.js";
+import UsersManager from "../data/manager/users.manager.js";
 
 
 const usersManager = new UsersManager()
@@ -44,6 +44,15 @@ export const findUserToUpdate = async (tokenPass, timeToExpiredPass) => {
 export const createUser = async (obj) => {
     try {
         const user = await usersManager.createOne(obj)
+        return user
+    } catch (error) {
+        return error
+    }
+}
+
+export const updateUser = async (id, change, state) => {
+    try {
+        const user = await usersManager.updateUser(id, change, state)
         return user
     } catch (error) {
         return error

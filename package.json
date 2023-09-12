@@ -6,8 +6,8 @@
   "type": "module",
   "scripts": {
     "dev": "nodemon src/index.js -m dev",
-    "start": "nodemon src/index.js -m prod",
-    "test": "mocha test/**/*.test.js --file ./test/setup.test.js --timeout 5000"
+    "start": "node src/index.js -m prod",
+    "test": "mocha test/**/*.test.js -m test --file ./test/setup.test.js --timeout 5000"
   },
   "keywords": [],
   "author": "",
@@ -15,6 +15,7 @@
   "dependencies": {
     "bcrypt": "^5.1.0",
     "commander": "^11.0.0",
+    "connect-flash": "^0.1.1",
     "connect-mongo": "^5.0.0",
     "cookie-parser": "^1.4.6",
     "cors": "^2.8.5",
@@ -22,7 +23,6 @@
     "express": "^4.18.2",
     "express-handlebars": "^7.1.1",
     "express-session": "^1.17.3",
-    "jsonwebtoken": "^9.0.1",
     "mongoose": "^7.3.1",
     "mongoose-paginate-v2": "^1.7.1",
     "multer": "^1.4.5-lts.1",

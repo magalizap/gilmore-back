@@ -1,6 +1,6 @@
 import { expect } from "chai";
 import supertest from "supertest";
-import config from '../../src/config/envConfig.js'
+import config from '../../src/config/env.config.js'
 import { dropCart } from "../setup.test.js";
 import { authenticateUser } from '../auth/testAuth.test.js'
 

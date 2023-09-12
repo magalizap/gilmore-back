@@ -1,4 +1,4 @@
-import CartManager from "../data/manager/cartsManager.js";
+import CartManager from "../data/manager/carts.manager.js";
 
 const cartManager = new CartManager()
 

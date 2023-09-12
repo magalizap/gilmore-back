@@ -47,4 +47,13 @@ export default class UsersManager {
             return error
         }
     }
+
+    async updateUser(id, change, state){
+        try {
+            const user = userModel.findByIdAndUpdate(id, change, state)
+            return user
+        } catch (error) {
+            return error
+        }
+    }
 }

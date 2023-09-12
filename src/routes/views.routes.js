@@ -1,6 +1,6 @@
 import { Router } from "express";
-import { authAdminOrUserPremium, isAuthenticated } from "../middlewares/auth.js";
-import { messageChat, realtimeproducts } from "../controllers/messages.controllers.js";
+import { authAdminOrUserPremium, isAuthenticated } from "../middlewares/auth.middleware.js";
+import { messageChat, realtimeproducts } from "../controllers/sockets.controllers.js";
 
 
 

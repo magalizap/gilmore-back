@@ -1,4 +1,4 @@
-import config from '../../src/config/envConfig.js'
+import config from '../../src/config/env.config.js'
 import { expect } from "chai";
 import supertest from "supertest";
 import { dropUser } from "../setup.test.js";

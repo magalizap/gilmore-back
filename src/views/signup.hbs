@@ -2,13 +2,13 @@
     <form action="/api/sessions/signup" method="post" class='form' >
         <p class='title'>FORMULARIO REGISTRO:</p>
         <label>Nombre:</label>
-        <input class='inputLogin'  type='text'  name="first_name" ></input>
+        <input class='inputLogin'  type='text'  name="first_name" required></input>
         <label>Apellido:</label>
-        <input class='inputLogin'  type='text'  name="last_name" ></input>
+        <input class='inputLogin'  type='text'  name="last_name" required></input>
         <label>Email:</label>
-        <input class='inputLogin'  type='email' name="email" ></input>
+        <input class='inputLogin'  type='email' name="email" required></input>
         <label>Contraseña:</label>
-        <input class='inputLogin'  type='password' name="password" ></input>
+        <input class='inputLogin'  type='password' name="password" required></input>
 
         <button type="submit" class="btn btn-primary submit">Registrar</button>
         <p class="toSignup"> ¿No tienes una cuanta?<a href='/api/users/login'>Inicia sesión</a></p>

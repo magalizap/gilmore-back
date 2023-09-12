@@ -1,10 +1,11 @@
 <div class="centerLogin">
     <form action="/api/sessions/login" method="post" class='form' >
         <p class='title'>INICIA SESIÓN:</p>
+        
         <label>Email:</label>
-        <input class='inputLogin'  type='email' name="email" ></input>
+        <input class='inputLogin'  type='email' name="email" required></input>
         <label>Contraseña:</label>
-        <input class='inputLogin' type="password" name="password" ></input>
+        <input class='inputLogin' type="password" name="password" required></input>
 
         <input class="btn btn-primary submit" type="submit" value="LOGIN">
         <p class="toSignup"> ¿No tienes una cuanta?<a href='/api/users/signup'>Registrate</a></p>

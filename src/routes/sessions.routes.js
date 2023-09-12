@@ -1,8 +1,9 @@
 import { Router } from "express";
 import passport from "passport";
-import { findUsers, destroySession, restorePass, updatePass, signupUser, loginUser } from "../controllers/users.controller.js";
+import { findUsers, destroySession, restorePass, updatePass, signupUser, loginUser } from "../controllers/users.controllers.js";
 //import { userModel } from "../data/models/users.model.js";
-import { isAuthenticated } from "../middlewares/auth.js";
+import { isAuthenticated } from "../middlewares/auth.middleware.js";
+import uploader from "../utils/uploader.js";
 //import config from "../config/envConfig.js";
 
 
@@ -11,15 +12,15 @@ const sessionRouter = Router()
 
 // PASSPORT LOCAL
 
-sessionRouter.post('/signup', passport.authenticate('signup'), signupUser)
+sessionRouter.post('/signup', passport.authenticate('signup', {
+    failureRedirect: '/api/users/signup',
+    failureFlash: true
+}), signupUser)
 
-sessionRouter.post('/login', passport.authenticate('login'), loginUser)
-
-
-/*
-sessionRouter.post('/signup', signupUser)
-
-sessionRouter.post('/login', loginUser)*/
+sessionRouter.post('/login', passport.authenticate('login', {
+    failureRedirect: '/api/users/login',
+    failureFlash: true
+}), loginUser)
 
 sessionRouter.get('/logout', destroySession)
 

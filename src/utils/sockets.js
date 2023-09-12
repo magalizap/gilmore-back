@@ -3,9 +3,15 @@ import { createOne, deleteOne, findAll as findAllProducts, findById, updateOne} 
 import { v4 as uuidv4 } from 'uuid'; // genera un codigo random
 
 let ownerEmail
+let users 
 
 export const userPremium = (user) => {
     ownerEmail = user
+}
+
+export const usersOnline = (userOn) => {
+    users = userOn.first_name
+    console.log(users)
 }
 
 export default (io) => {
@@ -23,12 +29,12 @@ export default (io) => {
         messagesList() // envío mi arreglo de mensajes
 
         socket.on('client:sendMessage', async (data) => {
-            console.log(data.user)
-            await create({user: data.user, message: data.msg})
+            await create({user: users, message: data.msg})
             io.sockets.emit('server:newMessage', {
                 msg: data.msg,
-                user: data.user
+                user: users
             })
+            
         })
 
 
@@ -82,7 +88,7 @@ export default (io) => {
         })
 
         socket.emit('prueba', 'probando')
-
+        //process.on('warning', e => console.warn('-----+------',e.stack))
         socket.on("disconnect", async () => {
             console.log(socket.id, "disconnected")
         })

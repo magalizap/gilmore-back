@@ -8,3 +8,10 @@
     padding: 40px;
     width: 100%;
 }
+
+.circle {
+    width: 150px; 
+    height: 150px;
+    border-radius: 50%; 
+    object-fit: cover; 
+}

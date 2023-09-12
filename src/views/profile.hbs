@@ -1,8 +1,65 @@
 
-
+<!--
 <main class="centerProfile">
     <h1>Mi perfil</h1>
     <p>Nombre: {{payload.full_name}}</p>
     <p>Email: {{payload.email}}</p>
     <p>Rol: {{payload.role}}</p>
-</main>
+</main>-->
+
+
+<div class="container">
+    <div class="row">
+        <div class="col-md-4 mt-5">
+            <div class="card">
+                <div class="card-body">
+                    <img src="/img/image.jpg" alt="img" class="circle">
+                    <h1 class="card-title">Mi perfil</h1>
+                    <p class="card-text">Nombre: {{payload.full_name}}<p>
+                    <p class="card-text">Email: {{payload.email}}</p>
+                    <p class="card-text">Rol: {{payload.role}}</p>
+                    <a href="#" class="btn btn-secondary">Subir imagen</a>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-8 mt-5">
+            <div class="card w-100 d-flex">
+                <div class="card-body">
+                    <form action='/api/users/{{user._id}}/documents' method="post" enctype="multipart/form-data">
+       			        <label for="formFileSm" class="form-label">Documento de indentificación:</label>
+                        <div class="d-flex mb-2 gap-3">
+                        <input class="form-control form-control-sm"  type="file" name="document">
+                        </div>
+
+                        <label for="formFileSm" class="form-label">Comprobante de domicilio:</label>
+                        <div class="d-flex mb-2 gap-3">
+                        <input class="form-control form-control-sm" type="file" name="document">
+                        </div>      
+
+                        <label for="formFileSm" class="form-label">Comprobante de estado de cuenta:</label>
+                        <div class="d-flex gap-3">
+                        <input class="form-control form-control-sm" type="file" name="document">
+                        </div>    
+                        <button type="submit" class="btn btn-outline-secondary mt-3">Cargar</button>
+                    </form>
+                </div>
+            </div>
+            <div class="card mt-2">
+                <div class="card-body">
+                {{#if payload.documents}}
+                    <h2>Documentos Subidos:</h2>
+                    <ul>
+                    {{#each payload.documents}}
+                        <li>{{this.name}}</li>
+                        <img src={{this.reference}} alt="img" width="100%" height="100%">
+                    {{/each}}
+                    </ul>
+                {{else}}
+                    <p>Los archivos se verán aqui</p>
+                {{/if}}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
