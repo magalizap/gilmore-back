@@ -9,8 +9,7 @@
     <img src="/img/image.jpg" class="card-img-top" alt="img">
     <div class="card-body">
       <h5 class="card-title">{{this.title}}</h5>
-      <p class="card-text">{{this.description}}</p>
-      <p>Precio: {{this.price}}</p>
+      <span>Stock disponible: {{this.stock}}</span>
       <a href='/api/products/{{_id}}' class="btn btn-primary submit">Detalle del producto</a>
     </div>
   </div>
@@ -27,10 +26,10 @@
         <span aria-hidden="true">&laquo;</span>
       </a>
     </li>
-    <!-->ver como marcar una página específica<!-->
-    <li class="page-item"><a class="page-link" href="#">1</a></li> 
-    <li class="page-item"><a class="page-link" href="#">2</a></li>
-    <li class="page-item"><a class="page-link" href="#">3</a></li>
+
+    <li class="page-item"><a class="page-link" href="http://localhost:8080/api/products?page=1">1</a></li> 
+    <li class="page-item"><a class="page-link" href="http://localhost:8080/api/products?page=2">2</a></li>
+    <li class="page-item"><a class="page-link" href="http://localhost:8080/api/products?page=3">3</a></li>
     <li class="page-item">
       <a class="page-link"href={{products.nextLink}} aria-label="Next">
         <span aria-hidden="true">&raquo;</span>

@@ -44,6 +44,7 @@ const userSchema = new Schema({
         ],
         default: []
     },
+    imageProfile: String,
     last_connection: Date,
     timeToExpiredPass: Date,
     tokenPass: String

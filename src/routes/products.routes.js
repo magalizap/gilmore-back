@@ -1,6 +1,7 @@
 import { Router } from "express";
 import { createOneProduct, deleteOneProduct, findAllProducts, findOneProduct, updateOneProduct } from "../controllers/products.controllers.js";
-import { authAdminOrUserPremium, isAuthenticated } from "../middlewares/auth.middleware.js";
+import { authAdminOrUserPremium, isAuthenticated } from "../middlewares/auth/auth.middleware.js";
+
 
 
 const productRouter = Router()

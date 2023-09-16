@@ -84,7 +84,7 @@ describe('Test routes sessions', () => {
         expect(response.body.payload).to.be.ok
     })
 
-    it('[POST] /api/sessions/login status 401', async() => {
+    it('[POST] /api/sessions/login failureRedirect 302', async() => {
 
         const mockUser = {
             email: 'email@invalid.com',
@@ -92,7 +92,7 @@ describe('Test routes sessions', () => {
         }
         const response = await requester.post('/api/sessions/login').send(mockUser)
         
-        expect(response.statusCode).to.be.eql(401)
+        expect(response.statusCode).to.be.eql(302)
         expect(response.body.payload).not.to.be.ok
     })
 

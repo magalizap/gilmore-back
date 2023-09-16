@@ -1,9 +1,8 @@
 import { ticketModel } from "../data/models/ticket.model.js";
-import { createOne, findOneById, updateOne } from "../services/carts.service.js";
+import { createOne, deleteOne, findOneById, updateOne} from "../services/carts.service.js";
 import { findById as findProductById} from "../services/products.service.js";
 import { v4 as uuidv4 } from 'uuid'; // genera un codigo random
 import { findUserByEmail } from "../services/users.service.js";
-
 
 
 export const createOneCart = async (req, res) => {
@@ -19,8 +18,9 @@ export const createOneCart = async (req, res) => {
 export const findById = async (req, res) => {
     const cid = req.params.cid
     try {
-        const cartId = await findOneById({_id: cid})
-        res.status(200).json({message: 'Product found', cartId})
+        const cart = await findOneById({_id: cid})
+        //res.status(200).json({message: 'Product found', cartId})
+        res.status(200).render('cart', { cart })
     } catch (error) {
         req.logger.error('Error in findById')
         res.status(500).json({error: error})
@@ -42,12 +42,10 @@ export const addProduct = async (req, res) => {
 
         const parsedQuantity = parseInt(quantity)
         const cart = await findOneById({_id: cid})
-
-        console.log(cart.products.owner)
         const addProductToCart = { id_prod: pid, quantity: parsedQuantity}
         cart.products.push(addProductToCart)
         await cart.save()
-        res.status(200).json(cart)
+        res.status(200).redirect(`/api/cart/${cid}`)
     } catch (error) {
         req.logger.error('Error in addProduct')
         res.status(500).json({error: error})
@@ -55,13 +53,14 @@ export const addProduct = async (req, res) => {
 }
 
 export const deleteOneProduct = async (req, res) => {
-    const cid = req.params.cid
+    const cid = req.params.cid 
     const pid = req.params.pid
     try {
         const cart = await findOneById({_id: cid})
-        cart.products.splice({id_prod: pid}, 1)
+        console.log(cart)
+        cart.products = cart.products.filter((item) => item.id_prod._id.toString() !== pid)
         await cart.save()
-        res.status(200).json({cart: cart})
+        res.status(200).redirect(`/api/cart/${cid}`)
 
     } catch (error) {
         req.logger.error('Error in deleteOneProduct')

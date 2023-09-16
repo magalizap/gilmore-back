@@ -6,10 +6,27 @@
     </div>
     <div class="col-md-8">
       <div class="card-body">
-        <h5 class="card-title">{{product.title}}</h5>
-        <p class="card-text">{{product.description}}</p>
-        <p class="card-text"><small class="text-muted">Última actualización hace 3 minutos</small></p>
+        <h1 class="card-title">{{product.title}}</h1>
+        <div class="mt-5">
+        <p class="card-text">Precio: ${{product.price}}</p>
+        <p class="card-text">Descripción: {{product.description}}</p>
+        <p class="card-text">Stock disponible: {{product.stock}}</p>
+        </div>
+
+        <form action="/api/cart/{{user.idCart}}/product/{{product._id}}" method="post">
+          <div class="card-body d-flex justify-content-evenly">
+            <label>Cantidad:</label>
+            <input type="number" class="w-25" name="quantity">
+            <button type="submit" class="btn btn-outline-secondary">Agregar al carrito</button>
+          </div>
+        </form>
+
+
       </div>
     </div>
   </div>
 </div>
+
+<!--
+          <p class="card-text"><small class="text-muted">Última actualización hace 3 minutos</small></p>
+ -->

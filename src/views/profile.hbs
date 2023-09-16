@@ -13,12 +13,22 @@
         <div class="col-md-4 mt-5">
             <div class="card">
                 <div class="card-body">
-                    <img src="/img/image.jpg" alt="img" class="circle">
-                    <h1 class="card-title">Mi perfil</h1>
+                    {{#if payload.imageProfile}}
+                    <img  src={{payload.imageProfile}} alt="img" class="circle">
+                    {{else}}
+                    <img id="preview-image" src="/img/profile-default.jpg" alt="Vista previa de la imagen" class="circle">
+                    {{/if}}
+                    <form action="/api/users/{{user._id}}/current" method="post" enctype="multipart/form-data">
+                    <input type="file" id="file" name="profile">
+                    <div class="d-flex justify-content-center">
+                        <label for="file" class="btn btn-outline-secondary mt-3">Cambiar foto</label>
+                    </div>
+                    <h5 class="card-title">Mi perfil</h5>
                     <p class="card-text">Nombre: {{payload.full_name}}<p>
                     <p class="card-text">Email: {{payload.email}}</p>
                     <p class="card-text">Rol: {{payload.role}}</p>
-                    <a href="#" class="btn btn-secondary">Subir imagen</a>
+                    <button type="submit" class="btn btn-outline-secondary mt-3">Subir imagen</button>
+                    </form>
                 </div>
             </div>
         </div>
@@ -41,20 +51,28 @@
                         <div class="d-flex gap-3">
                         <input class="form-control form-control-sm" type="file" name="document">
                         </div>    
-                        <button type="submit" class="btn btn-outline-secondary mt-3">Cargar</button>
+                        
+                        <div class="d-flex justify-content-end">
+                            <button type="submit" class="btn btn-outline-secondary mt-3">Cargar</button>
+                        </div>
                     </form>
                 </div>
             </div>
             <div class="card mt-2">
                 <div class="card-body">
                 {{#if payload.documents}}
-                    <h2>Documentos Subidos:</h2>
+                    <h5>Documentos Subidos:</h5>
+
                     <ul>
-                    {{#each payload.documents}}
-                        <li>{{this.name}}</li>
-                        <img src={{this.reference}} alt="img" width="100%" height="100%">
-                    {{/each}}
-                    </ul>
+                        <div class="d-flex justify-content-between p-3 bg-light">
+                        {{#each payload.documents}}
+                            <i class="fa-solid fa-file-lines" style="color: #56ab91;"></i>
+                            <span>{{this.name}} • uploaded</span>
+                            <i class="fa-solid fa-check" style="color: #56ab91;"></i>
+                        {{/each}}
+                        </div>
+                    </ul>                        
+                
                 {{else}}
                     <p>Los archivos se verán aqui</p>
                 {{/if}}
@@ -63,3 +81,12 @@
         </div>
     </div>
 </div>
+
+
+<!--
+    CHECKEAR ESTO
+    <div class="input-group">
+  <input type="file" class="form-control" id="inputGroupFile04" aria-describedby="inputGroupFileAddon04" aria-label="Upload">
+  <button class="btn btn-outline-secondary" type="button" id="inputGroupFileAddon04">Button</button>
+</div>
+ -->

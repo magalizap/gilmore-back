@@ -6,14 +6,13 @@ export const loadProducts = (prod) => {
     socket.on('server:loadProducts', prod)
 }
 
-export const saveProduct = (title, category, price, stock, description, thumbnail) => {
+export const saveProduct = (title, category, price, stock, description) => {
     socket.emit('client:newProduct', {
         title, 
         category, 
         price, 
         stock, 
         description, 
-        thumbnail
     })
 }
 
@@ -33,7 +32,7 @@ export const onSelectedProduct = (prod) => {
     socket.on('server:selectedProduct', prod)
 }
 
-export const updateProduct = (id, title, category, price, stock, description, thumbnail) => {
+export const updateProduct = (id, title, category, price, stock, description) => {
     socket.emit('client:updateProduct', {
         _id: id,
         title, 
@@ -41,7 +40,6 @@ export const updateProduct = (id, title, category, price, stock, description, th
         price, 
         stock, 
         description, 
-        thumbnail
     })
 }
 

@@ -1,0 +1,36 @@
+<div class="container">
+    <div class="row">
+        {{#each cart.products}}
+        <div class="col-md-6 mt-5">
+            <div class="card mb-2">
+                <div class="d-flex justify-content-evenly card-body">
+                    <h4 class="card-title">{{this.id_prod.title}}</h4>
+                    <p class="card-text">Precio: ${{this.id_prod.price}}</p>
+                    <p class="card-text">Cantidad: {{this.quantity}}</p>
+                    <form action="/api/cart/{{../cart._id}}/product/{{this.id_prod._id}}?_method=DELETE" method="POST">
+                        <input type="hidden" name="_method" value="DELETE">
+                        <button class="bg-transparent border-0" type="submit">
+                            <i class="fa-solid fa-trash" style="color: #56ab91;"></i>
+                        </button>
+                    </form>                    
+                </div>
+            </div>
+        </div>
+        {{else}}
+        <div class="card mx-auto">
+            <div class="card-body">
+                <p class="lead">Carrito vacío. Aún no haz agregado productos.</p>
+                <a href="/api/products" class="btn btn-success btn-block">Ver catálogo disponible</a>
+            </div>
+        </div>
+        {{/each}}
+        <div class="col-md-4 mt-5">
+
+        </div>
+    </div>
+</div>
+
+
+<!-- 
+
+-->

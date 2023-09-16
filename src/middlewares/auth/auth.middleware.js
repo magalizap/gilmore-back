@@ -1,7 +1,7 @@
 // Middleware de autenticación de usuarios
 
 export const isAuthenticated = (req, res, next) => {
-    if(!req.user) return res.redirect('/api/users/login'), req.logger.error('Debes iniciar sesión primero')
+    if(!req.user) return res.status(401).redirect('/api/users/login'), req.logger.error('Debes iniciar sesión primero')
         
     if (req.user.role === 'Admin') {
         res.locals.isAdmin = true
@@ -15,7 +15,7 @@ export const isAuthenticated = (req, res, next) => {
 }
 
 export const authUser = (req, res, next) => {
-    if(!req.user) return res.redirect('/api/users/login'), req.logger.error('Debes iniciar sesión primero')
+    if(!req.user) return res.status(401).redirect('/api/users/login'), req.logger.error('Debes iniciar sesión primero')
     if(req.user.role === 'User') {
         req.logger.info('tienes rol de usuario')
         res.locals.isAdmin = false
@@ -28,7 +28,7 @@ export const authUser = (req, res, next) => {
 
 export const authAdminOrUserPremium = (req, res, next) => {
 
-    if(!req.user) return res.redirect('/api/users/login'), req.logger.error('Debes iniciar sesión primero')
+    if(!req.user) return res.status(401).redirect('/api/users/login'), req.logger.error('Debes iniciar sesión primero')
     if (req.user.role === 'Admin') {
         req.logger.info('tienes rol de administrador')
         res.locals.isAdmin = true

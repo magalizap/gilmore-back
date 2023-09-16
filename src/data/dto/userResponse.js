@@ -5,5 +5,6 @@ export default class UserResponse {
         this.email = user.email
         this.role = user.role
         this.documents = user.documents
+        this.imageProfile = user.imageProfile
     }
 }

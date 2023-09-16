@@ -11,7 +11,7 @@ import userRouter from './routes/users.routes.js'
 import sessionsRoutes from './routes/sessions.routes.js'
 import cartRouter from './routes/carts.routes.js'
 import { __dirname } from './utils/path.js'
-import addLogger from './middlewares/logger.middleware.js'
+import addLogger from './middlewares/log/logger.middleware.js'
 import { engine } from 'express-handlebars'
 import * as path from 'path'
 import { Server } from 'socket.io'
@@ -19,8 +19,9 @@ import { swaggerServe, swaggerSetup } from './helpers/swagger.js'
 import errorHandler from './middlewares/errors/index.js'
 import sockets from './utils/sockets.js'
 import viewRouter from './routes/views.routes.js'
-import { logger } from './middlewares/logger.middleware.js'
+import { logger } from './middlewares/log/logger.middleware.js'
 import flash from 'connect-flash'
+import methodOverride from 'method-override'
 
 // Config
 export const app = express()
@@ -61,13 +62,14 @@ app.use(session({
     resave: false, //para que mi sesión se mantenga activa
     saveUninitialized: false // elimino las sesiones que están vacías
 }))
+
 //Passport
 initializePassport()
 app.use(passport.initialize())
 app.use(passport.session())
 app.use(addLogger)
-app.use(flash())
-
+app.use(flash()) // alertas
+app.use(methodOverride('_method')) // métodos
 
 // Variables globales
 app.use((req, res, next) => {
@@ -101,7 +103,6 @@ app.use('/loggerTest', (req, res) => {
     req.logger.warning("Warning test")
     req.logger.error("Error test")
     req.logger.fatal("Fatal test")
-    
     res.send('Probando Logger')
 })
 

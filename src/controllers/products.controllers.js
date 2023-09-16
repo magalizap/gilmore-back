@@ -11,9 +11,10 @@ export const findAllProducts = async(req, res) => {
     try {
         const getQuerys = await findAll(
             { status: status ?? true },                   
-            { limit: limit ?? 10, page: page ?? 1, sort: { price: price ?? -1 }, lean: true }
+            { limit: limit ?? 6, page: page ?? 1, sort: { price: price ?? -1 }, lean: true }
         )
 
+         
         getQuerys.prevLink = getQuerys.hasPrevPage ? `http://${req.headers.host}/api/products?page=${getQuerys.prevPage}` : null
         getQuerys.nextLink = getQuerys.hasNextPage ? `http://${req.headers.host}/api/products?page=${getQuerys.nextPage}`: null
 
@@ -49,7 +50,6 @@ export const findOneProduct = async (req, res) => {
 export const createOneProduct = async (req, res, next) => {
 
     try {
-
         const { title, description, price, thumbnail, code, stock, status, category } = req.body
 
         if(!title || !description || !price || !thumbnail || !code || !stock || !status || !category){

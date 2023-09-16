@@ -1,6 +1,7 @@
 import { Router } from "express";
-import { changeRol, uploads, validateToken } from "../controllers/users.controllers.js";
-import uploader from "../utils/uploader.js";
+import { changeRol, findUsers, uploadProfile, uploads, validateToken } from "../controllers/users.controllers.js";
+import uploader from "../middlewares/upload/uploader.middleware.js";
+import { isAuthenticated } from "../middlewares/auth/auth.middleware.js";
 
 
 
@@ -27,6 +28,6 @@ userRouter.put('/premium/:uid', changeRol)
 
 // SUBIDA DE ARCHIVOS
 userRouter.post('/:uid/documents', uploader.array('document', 3), uploads)
-
+userRouter.post('/:uid/current', isAuthenticated, uploader.single('profile'), uploadProfile)
 
 export default userRouter

@@ -4,7 +4,7 @@ import UserDB from "../data/dto/user.dto.js"
 import { findUserByEmail, findUserById, findUserByToken, findUserToUpdate, updateUser } from "../services/users.service.js"
 import crypto from 'crypto'
 import { transporter } from "../helpers/nodemailer.js"
-import { hashData, compareData } from "../utils/bcrypt.js"
+import { hashData } from "../utils/bcrypt.js"
 import config from "../config/env.config.js"
 
 export const findUsers = async (req, res, next) => {
@@ -20,7 +20,7 @@ export const findUsers = async (req, res, next) => {
             }
         }else {
             if(payload){
-                res.render('profile', {payload, style: 'profile.css'})
+                res.render('profile', {payload, style: 'profile.css', script: 'profile.js'})
             }else {
                 res.redirect('/api/users/login')
             }
@@ -207,6 +207,28 @@ export const uploads = async (req, res) => {
             payload.documents.push(saveDocs)
             await payload.save()
         }
+        
+        res.redirect('/api/sessions/current')
+        
+    } catch (error) {
+        req.logger.error('Error in uploads')
+        res.status(500).json({ error: error })
+    }
+}
+
+
+export const uploadProfile = async (req, res) => {
+    try {
+        const uid = req.params.uid
+        const payload = await findUserById(uid)
+    
+        const { path } = req.file
+    
+        const index = path.indexOf('/upload') !== -1 ? path.indexOf('/upload') : path.indexOf('\\upload')
+        const newPath = path.substring(index)
+        payload.imageProfile = newPath
+        console.log(payload)
+        await payload.save()
         
         res.redirect('/api/sessions/current')
         

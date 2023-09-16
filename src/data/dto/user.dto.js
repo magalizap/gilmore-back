@@ -12,7 +12,8 @@ export default class UserDB {
             full_name: `${user.first_name} ${user.last_name}`,
             email: user.email,
             role: user.role,
-            documents: user.documents
+            documents: user.documents,
+            imageProfile: user.imageProfile
         }
     }
 }

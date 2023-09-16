@@ -1,10 +1,9 @@
 import { Router } from "express";
 import passport from "passport";
 import { findUsers, destroySession, restorePass, updatePass, signupUser, loginUser } from "../controllers/users.controllers.js";
-//import { userModel } from "../data/models/users.model.js";
-import { isAuthenticated } from "../middlewares/auth.middleware.js";
-import uploader from "../utils/uploader.js";
-//import config from "../config/envConfig.js";
+import { isAuthenticated } from "../middlewares/auth/auth.middleware.js";
+import uploader from "../middlewares/upload/uploader.middleware.js";
+
 
 
 const sessionRouter = Router()
@@ -35,7 +34,6 @@ sessionRouter.get('/google', passport.authenticate('googleStrategy', {failureRed
 
 // PERFIL DEL USUARIO
 sessionRouter.get('/current', isAuthenticated, findUsers)
-
 
 // RESTAURACIÓN DE CONTRASEÑAS
 sessionRouter.post('/restore', restorePass)

@@ -1,6 +1,6 @@
 import winston from "winston";
-import config from "../config/env.config.js";
-import { __dirname } from "../utils/path.js";
+import config from "../../config/env.config.js";
+import { __dirname } from "../../utils/path.js";
 
 winston.transports.File.prototype.setMaxListeners(15) 
 /*

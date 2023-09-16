@@ -18,6 +18,7 @@
       <ul class="navbar-nav ml-auto" >
       {{#if user}}
         <a class="nav-link active" aria-current="page" href="/chat"><img src='/img/chat.png'/></a>
+        <a class="nav-link active" aria-current="page" href="/api/cart/{{user.idCart}}">Carrito</a>
         <a class="nav-link active" aria-current="page" href="/api/sessions/logout">Cerrar sesión</a>
         <a class="nav-link" href="/api/sessions/current">Perfil</a>
       {{else}}

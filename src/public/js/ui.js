@@ -42,6 +42,7 @@ export const renderProducts = (arrayProds) => {
 }
 
 export const fillForm = (prod) => {
+
   title.value = prod.title,
   category.value = prod.category
   price.value = prod.price,
@@ -54,6 +55,18 @@ export const fillForm = (prod) => {
 
 export const onHandleSubmit = (e) => {
     e.preventDefault()
+    const file = thumbnail.files[0]
+
+    if(file){
+      const formData = new FormData()
+      formData.append('products', file)
+      fetch('/realtimeproducts/upload', {
+        method: 'POST',
+        body: formData
+      })
+      .then((res) => res.text())
+
+    }
 
     if(saveId){
       updateProduct(

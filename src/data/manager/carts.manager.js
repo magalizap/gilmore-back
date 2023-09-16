@@ -21,24 +21,10 @@ export default class CartManager {
         }
     }
 
-    async addProductCart(cid, pid, quantity){
-        try {
-            const cart = this.findOneById(cid)
-            const addProductToCart = { id_prod: pid, quantity: quantity}
-            cart.products.push(addProductToCart)
-            await cart.save()
-            return cart
-        } catch (error) {
-            return error
-        }
 
-    }
-
-    async deleteOne(cid, pid){
+    async deleteOne(pid){
         try {
-            const cart = this.findOneById(cid)
-            cart.products.splice({id_prod: pid}, 1)
-            await cart.save()
+            const cart = await cartModel.findByIdAndDelete(pid)
             return cart
         } catch (error) {
             return error
@@ -47,7 +33,7 @@ export default class CartManager {
 
     async deleteCart(cid) {
         try {
-            const emptyCart = this.findOneById(cid)
+            const emptyCart = await cartModel.findOne(cid)
             emptyCart.products = []
             await emptyCart.save()
             return emptyCart
@@ -79,4 +65,3 @@ export default class CartManager {
         }
     }
 }
-

@@ -13,7 +13,8 @@ paths:
                 type: array
                 items:
                   $ref: '#components/schemas/Product'
-
+        '401':
+          description: Debes iniciar sesión primero
         '500':
           description: Internal Server Error
     post:
@@ -29,6 +30,8 @@ paths:
       responses:
         '200':
           description: New product created!
+        '401':
+          description: Debes iniciar sesión primero        
         '500':
           description: Internal Server Error
 

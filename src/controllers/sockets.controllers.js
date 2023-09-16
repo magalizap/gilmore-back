@@ -1,4 +1,4 @@
-import { userPremium, usersOnline } from "../utils/sockets.js"
+import { upload, userPremium, usersOnline } from "../utils/sockets.js"
 
 
 export const messageChat = async(req, res) => {
@@ -14,5 +14,15 @@ export const realtimeproducts = async (req, res) => {
        ownerEmail = req.user.email 
     }
     userPremium(ownerEmail)
+    res.render('realtimeproducts', {style: 'products.css', script: 'main.js'})
+}
+
+export const realtimeUpload = async (req, res) => {
+    console.log(req.file)
+    const {path} = req.file
+
+    const index = path.indexOf('/upload') !== -1 ? path.indexOf('/upload') : path.indexOf('\\upload')
+    const newPath = path.substring(index)
+    upload(newPath)
     res.render('realtimeproducts', {style: 'products.css', script: 'main.js'})
 }

@@ -22,23 +22,10 @@ export const findOneById = async (cid) => {
     }
 }
 
-export const addProductCart = async (cid, pid, quantity) => {
-    try {
-        const cart = await cartManager.findOneById(cid)
-        const addProductToCart = { id_prod: pid, quantity: quantity}
-        cart.products.push(addProductToCart)
-        await cart.save()
-        return cart
-    } catch (error) {   
-        return error
-    }
-}
 
-export const deleteOne = async (cid, pid) => {
+export const deleteOne = async (pid) => {
     try {
-        const cart = await cartManager.findOneById(cid)
-        cart.products.splice({id_prod: pid}, 1)
-        await cart.save()
+        const cart = await cartManager.deleteOne(pid)
         return cart
     } catch (error) {
         return error
