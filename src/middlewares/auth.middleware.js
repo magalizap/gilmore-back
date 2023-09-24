@@ -26,6 +26,18 @@ export const authUser = (req, res, next) => {
     } 
 }
 
+export const authAdmin = (req, res, next) => {
+    if(!req.user) return res.status(401).redirect('/api/users/login'), req.logger.error('Debes iniciar sesión primero')
+    if (req.user.role === 'Admin') {
+        req.logger.info('tienes rol de administrador')
+        res.locals.isAdmin = true
+        next()
+    }else {
+        req.logger.error('no tienes los permisos suficientes')
+        return res.redirect('/api/products')
+    }
+}
+
 export const authAdminOrUserPremium = (req, res, next) => {
 
     if(!req.user) return res.status(401).redirect('/api/users/login'), req.logger.error('Debes iniciar sesión primero')

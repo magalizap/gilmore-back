@@ -50,8 +50,26 @@ export default class UsersManager {
 
     async updateUser(id, change, state){
         try {
-            const user = userModel.findByIdAndUpdate(id, change, state)
+            const user = await userModel.findByIdAndUpdate(id, change, state)
             return user
+        } catch (error) {
+            return error
+        }
+    }
+
+    async findAllUsers(){
+        try {
+            const users = await userModel.find()
+            return users
+        } catch (error) {
+            return error
+        }
+    }
+
+    async deleteUsers(obj){
+        try {
+            const users = await userModel.deleteMany(obj)
+            return users
         } catch (error) {
             return error
         }

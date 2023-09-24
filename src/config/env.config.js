@@ -41,5 +41,5 @@ export default {
   mailing_user: process.env.MAILING_USER,
   mailing_service: process.env.MAILING_SERVICE,
   mailing_password: process.env.MAILING_PASSWORD,
-  node_env: process.env.NODE_ENV
+  node_env: process.env.NODE_ENV || 'prod'
 }

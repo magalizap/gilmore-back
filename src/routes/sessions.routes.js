@@ -1,8 +1,8 @@
 import { Router } from "express";
 import passport from "passport";
-import { findUsers, destroySession, restorePass, updatePass, signupUser, loginUser } from "../controllers/users.controllers.js";
-import { isAuthenticated } from "../middlewares/auth/auth.middleware.js";
-import uploader from "../middlewares/upload/uploader.middleware.js";
+import {  destroySession, restorePass, updatePass, signupUser, loginUser } from "../controllers/users.controllers.js";
+
+
 
 
 
@@ -10,7 +10,6 @@ const sessionRouter = Router()
 
 
 // PASSPORT LOCAL
-
 sessionRouter.post('/signup', passport.authenticate('signup', {
     failureRedirect: '/api/users/signup',
     failureFlash: true
@@ -31,9 +30,6 @@ sessionRouter.get('/github', passport.authenticate('githubStrategy', {failureRed
 // PASSPORT GOOGLE
 sessionRouter.get('/googleSignup', passport.authenticate('googleStrategy', { scope: ['profile', 'email'] }));
 sessionRouter.get('/google', passport.authenticate('googleStrategy', {failureRedirect: '/api/session/errorLogin', successRedirect: '/api/products'}))
-
-// PERFIL DEL USUARIO
-sessionRouter.get('/current', isAuthenticated, findUsers)
 
 // RESTAURACIÓN DE CONTRASEÑAS
 sessionRouter.post('/restore', restorePass)

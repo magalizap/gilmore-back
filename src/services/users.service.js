@@ -58,3 +58,23 @@ export const updateUser = async (id, change, state) => {
         return error
     }
 }
+
+export const findAllUsers = async () => {
+    try {
+        const users = await usersManager.findAllUsers()
+        return users
+    } catch (error) {
+        return error
+
+    }
+}
+
+export const deleteUsers = async (obj) => {
+    try {
+        const users = await usersManager.deleteUsers(obj)
+        return users
+    } catch (error) {
+        return error
+
+    }
+}

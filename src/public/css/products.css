@@ -11,37 +11,16 @@
 }
 
 
-@media screen and (min-width:300px) {
-    .alinearProductos{
-        display: grid;
-        grid-template-columns: repeat(1, 1fr);
-        align-items: center
-    }
-}
-
-@media screen and (min-width:600px) {
-    .alinearProductos{
-        display: grid;
-        grid-template-columns: repeat(1, 1fr);
-    }
-}
-
-@media screen and (min-width:900px) {
-    .alinearProductos{
-        display: grid;
-        grid-template-columns: repeat(2, 1fr);
-    }
-}
-
-@media screen and (min-width:1200px) {
-    .alinearProductos{
-        display: grid;
-        grid-template-columns: repeat(3, 1fr);
-        gap: 25px;
-    }
-    .cards{
-        width: 85%;
-    }
+.alinearProductos {
+    display: grid;
+    grid-template-columns: repeat(
+        auto-fit,
+        minmax(
+            300px,
+            1fr
+        )
+    );
+    gap: 16px;
 }
 
 /*PRODUCT DETAIL*/

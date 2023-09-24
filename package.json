@@ -5,8 +5,8 @@
   "main": "index.js",
   "type": "module",
   "scripts": {
-    "dev": "nodemon src/index.js -m dev",
     "start": "node src/index.js -m prod",
+    "dev": "nodemon src/index.js -m dev",
     "test": "mocha test/**/*.test.js -m test --file ./test/setup.test.js --timeout 5000"
   },
   "keywords": [],

@@ -14,9 +14,9 @@
             <div class="card">
                 <div class="card-body">
                     {{#if payload.imageProfile}}
-                    <img  src={{payload.imageProfile}} alt="img" class="circle">
+                    <img src={{payload.imageProfile}} class="rounded-circle w-100" alt="img">
                     {{else}}
-                    <img id="preview-image" src="/img/profile-default.jpg" alt="Vista previa de la imagen" class="circle">
+                    <img id="preview-image" src="/img/profile-default.jpg" alt="Vista previa de la imagen" class="rounded-circle w-100">
                     {{/if}}
                     <form action="/api/users/{{user._id}}/current" method="post" enctype="multipart/form-data">
                     <input type="file" id="file" name="profile">

@@ -13,14 +13,24 @@
         <p class="card-text">Stock disponible: {{product.stock}}</p>
         </div>
 
-        <form action="/api/cart/{{user.idCart}}/product/{{product._id}}" method="post">
+        {{#if isInCart}}
+        <form action="/api/cart/{{user.idCart}}/product/{{product._id}}?_method=PUT" method="POST">
           <div class="card-body d-flex justify-content-evenly">
+            <input type="hidden" name="_method" value="PUT">
             <label>Cantidad:</label>
             <input type="number" class="w-25" name="quantity">
             <button type="submit" class="btn btn-outline-secondary">Agregar al carrito</button>
           </div>
+        </form>     
+        {{else}}
+        <form action="/api/cart/{{user.idCart}}/product/{{product._id}}" method="post">
+          <div class="card-body d-flex justify-content-evenly">
+            <label>Cantidad:</label>
+            <input type="number" class="w-25" name="quantity" required>
+            <button type="submit" class="btn btn-outline-secondary">Agregar al carrito</button>
+          </div>
         </form>
-
+        {{/if}}
 
       </div>
     </div>

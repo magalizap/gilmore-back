@@ -1,11 +1,7 @@
-<!--
-<div class="alinearProductos" id="products"></div>-->
-
-
 
 <div class="alinearProductos">
   {{#each products.docs}}
-  <div class="card" style="width: 18rem;">
+  <div class="card "  style="width: 100%;">
     <img src="/img/image.jpg" class="card-img-top" alt="img">
     <div class="card-body">
       <h5 class="card-title">{{this.title}}</h5>
@@ -15,9 +11,7 @@
   </div>
   {{/each}}
 </div>
-<!--
-<a href={{products.prevLink}}>BACK</a>
-<a href={{products.nextLink}}>NEXT</a>-->
+
 
 <nav aria-label="Page navigation example">
   <ul class="pagination justify-content-center">

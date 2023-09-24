@@ -42,24 +42,10 @@ export default class CartManager {
         }
     }
 
-    async updateOne(cid, pid, quantity){
+    async updateProduct(cid, pid, quantity){
         try {
-            const cart = this.findOneById(cid)
-            const arrayProducts = cart.products
-            const findProd = arrayProducts.findIndex((prod) => prod.id_prod == pid)
-            arrayProducts[findProd].quantity = arrayProducts[findProd].quantity + quantity
-            const updateCart = await cartModel.updateOne({_id: cid}, {products: arrayProducts})
-            return updateCart
-        } catch (error) {
-            return error
-        }
-    }
-
-    async updateCart(cid, pid, quantity){
-        try {
-            const cart = this.findOneById(cid)
-            cart.products = {products: [{id_prod: pid, quantity: quantity}]}
-            return cart
+            const updateQty = await cartModel.updateOne({_id:cid, 'products.id_prod': pid}, {$inc: {'products.$.quantity': parseInt(quantity)}})
+            return updateQty
         } catch (error) {
             return error
         }

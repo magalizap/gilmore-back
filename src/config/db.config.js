@@ -1,6 +1,6 @@
 import mongoose from "mongoose";
 import config from "./env.config.js";
-import { logger } from "../middlewares/log/logger.middleware.js";
+import { logger } from "../middlewares/logger.middleware.js";
 
 const URL = config.mongo_url
 

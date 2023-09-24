@@ -45,10 +45,11 @@ export default (io) => {
         // P R O D U C T S 
 
         const productsList = async () => {
-            const products = await findAllProducts()
+            const products = await findAllProducts({ status: true },                   
+                { limit: 10, page: 1, sort: { price:  -1 }, lean: true }
+            )
             //envío el listado de mis productos
             io.sockets.emit('server:loadProducts', products.docs)
-
         }
         
         productsList() //envío mi arreglo de productos
@@ -65,21 +66,21 @@ export default (io) => {
                 stock: data.stock, 
                 category: data.category, 
             })
-            console.log(newProduct)
             io.sockets.emit('server:newProduct', newProduct) // envío los datos del nuevo producto creado
         })
 
-        socket.on('client:deleteProduct', async (pid) => { // elimino el producto seleccionado y actualizo el front
+        socket.on('client:deleteProduct', async (pid) => { // elimino el producto seleccionado y actualizo el fronts
             await deleteOne(pid)
             productsList()
         })
 
-        socket.on('client:getProduct', async pid => {
+        socket.on('client:getProduct', async (pid) => {
             const product = await findById(pid)
             socket.emit('server:selectedProduct', product)
         })
 
         socket.on('client:updateProduct', async (updateProd) => {
+
             await updateOne(updateProd._id, {
                 title: updateProd.title,
                 description: updateProd.description, 
@@ -93,8 +94,6 @@ export default (io) => {
             productsList()
         })
 
-        socket.emit('prueba', 'probando')
-        //process.on('warning', e => console.warn('-----+------',e.stack))
         socket.on("disconnect", async () => {
             console.log(socket.id, "disconnected")
         })

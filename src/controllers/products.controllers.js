@@ -4,6 +4,7 @@ import { v4 as uuidv4 } from 'uuid'; // genera un codigo random
 import CustomError from '../services/custom/customError.js'
 import EErrors from "../services/errors/enum.js";
 import { generateProductErrorInfo } from '../services/errors/info.js'
+import { findOneById } from "../services/carts.service.js";
 
 
 export const findAllProducts = async(req, res) => {
@@ -35,8 +36,12 @@ export const findOneProduct = async (req, res) => {
     const {pid} = req.params
     try {
         const product = await findById(pid)
+        const cartContext = await findOneById(req.user.idCart)
+        const arrayProducts = cartContext.products
+        const isInCart = arrayProducts.some((prod) => prod.id_prod._id == pid)
+
         if(product){
-            res.render('productDetail', {product, style: 'products.css'})
+            res.render('productDetail', {product, style: 'products.css', isInCart})
 
         }else{
             res.status(200).json({message: 'No product'})

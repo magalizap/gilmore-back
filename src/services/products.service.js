@@ -13,6 +13,7 @@ export const findAll = async (filter, obj) => {
     }
 }
 
+
 export const findById = async (id) => {
     try {
         const products = await productManager.findOneById(id)

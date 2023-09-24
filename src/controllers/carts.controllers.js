@@ -1,10 +1,11 @@
 import { ticketModel } from "../data/models/ticket.model.js";
-import { createOne, deleteOne, findOneById, updateOne} from "../services/carts.service.js";
+import { createOne, findOneById, updateOne} from "../services/carts.service.js";
 import { findById as findProductById} from "../services/products.service.js";
 import { v4 as uuidv4 } from 'uuid'; // genera un codigo random
 import { findUserByEmail } from "../services/users.service.js";
 
 
+// creo el carrito de mi user
 export const createOneCart = async (req, res) => {
     try {
         const cart = await createOne([{products:[]}])
@@ -15,6 +16,7 @@ export const createOneCart = async (req, res) => {
     }
 }
 
+// visualizo el carrito de mi user
 export const findById = async (req, res) => {
     const cid = req.params.cid
     try {
@@ -27,13 +29,13 @@ export const findById = async (req, res) => {
     }
 }
 
+// agrego un producto al carrito
 export const addProduct = async (req, res) => {
     const cid = req.params.cid 
     const pid = req.params.pid
     const quantity = req.body.quantity
 
     try {
-
         const product = await findProductById(pid)
 
         if(req.user.role === 'Premium' && req.user.email === product.owner){
@@ -45,6 +47,7 @@ export const addProduct = async (req, res) => {
         const addProductToCart = { id_prod: pid, quantity: parsedQuantity}
         cart.products.push(addProductToCart)
         await cart.save()
+
         res.status(200).redirect(`/api/cart/${cid}`)
     } catch (error) {
         req.logger.error('Error in addProduct')
@@ -52,6 +55,7 @@ export const addProduct = async (req, res) => {
     }
 }
 
+// elimino un producto del carrito
 export const deleteOneProduct = async (req, res) => {
     const cid = req.params.cid 
     const pid = req.params.pid
@@ -68,6 +72,7 @@ export const deleteOneProduct = async (req, res) => {
     }
 }
 
+// vacío el carrito de productos
 export const deleteOneCart = async (req, res) => {
     try {
         const cid = req.params.cid
@@ -82,30 +87,33 @@ export const deleteOneCart = async (req, res) => {
     }
 }
 
+// si ese producto ya fue agregado, sumo la cantidad
 export const updateOneCart = async (req, res) => {
     const cid = req.params.cid
     const pid = req.params.pid
     const {quantity} = req.body
     try {
-        const cart = await findOneById({_id: cid})
-        const arrayProducts = cart.products
-        const findProd = arrayProducts.findIndex((prod) => prod.id_prod == pid)
-        arrayProducts[findProd].quantity = arrayProducts[findProd].quantity + quantity
-        const updateCart = await updateOne({_id: cid}, {products: arrayProducts})
-        res.status(200).json({cart: updateCart})
+        const result = await updateOne(cid, pid, quantity)
+        console.log(result)
+        if (result.modifiedCount === 0) {
+            return res.status(404).json({ message: 'Producto no encontrado en el carrito.' })
+        }
+        res.status(200).redirect(`/api/cart/${cid}`)
+
     } catch (error) {
         req.logger.error('Error in updateOneCart')
         res.status(500).json({error: error})
     }
 }
 
+// reemplazo la cantidad especificada por una nueva
 export const updateOneProduct = async (req, res) => {
     const cid = req.params.cid
-    const {pid} = req.body
-    const {quantity} = req.body
+    const products = req.body.products
     try {
         const cart = await findOneById({_id: cid})
-        cart.products = {products: [{id_prod: pid, quantity: quantity}]}
+        cart.products = {products: [{products}]}
+        //cart.products = {products: [{id_prod: pid, quantity: quantity}]}
         res.status(200).json({cart: cart})
     } catch (error) {
         req.logger.error('Error in updateOneProduct ')
@@ -113,55 +121,58 @@ export const updateOneProduct = async (req, res) => {
     }
 }
 
+// finalizar compra
 export const purchaseCart = async (req, res) => {
     const cid = req.params.cid
-    const {email} = req.body
-    try {
-        const cart = await findOneById({_id: cid})
-        const userEmail = await findUserByEmail(email)
-        const productsToPurchase = []
-        const productsNotPurchase = []
-        
-        for(const product of cart.products){
-            const productInStock = await findProductById(product.id_prod)
-        
-            if(product.quantity <= productInStock.stock){
-                // stock disponible
-                productInStock.stock -= product.quantity
-                await productInStock.save()
-                productsToPurchase.push(product)
-                
-            }else{
-                // no hay stock suficiente
-                productsNotPurchase.push(product)
-            }
+    //const {email} = req.body
     
+    const cart = await findOneById({_id: cid})
+    //const userEmail = await findUserByEmail(email)
+    const productsToPurchase = []
+    const productsNotPurchase = []
+    
+    for(const product of cart.products){
+        const productInStock = await findProductById(product.id_prod)
+    
+        if(product.quantity <= productInStock.stock){
+            // stock disponible
+            productInStock.stock -= product.quantity
+            await productInStock.save()
+            productsToPurchase.push(product)
+            
+        }else{
+            // no hay stock suficiente
+            productsNotPurchase.push(product)
         }
 
-        // Calcular el precio total 
-        const totalPrice = productsToPurchase.reduce(
-            (total, prod) => total + prod.id_prod.price * prod.quantity,  
-            0,
-        )
+    }
 
-        // crear ticket
-        const ticket = new ticketModel({
-            code: uuidv4(),
-            amount: totalPrice,
-            purchaser: userEmail.email
-        })
-        
-        await ticket.save()
+    // Calcular el precio total 
+    const totalPrice = productsToPurchase.reduce(
+        (total, prod) => total + prod.id_prod.price * prod.quantity,  
+        0,
+    )
 
-        // actualizar carrito
-        cart.products = productsNotPurchase
-        await cart.save()
+    // crear ticket
+    const ticket = new ticketModel({
+        code: uuidv4(),
+        amount: totalPrice,
+        purchaser: req.user.email
+    })
+    
+    await ticket.save()
+
+    // actualizar carrito
+    cart.products = productsNotPurchase
+    await cart.save()
+
+    try {
+
         res.status(200).json({
             message: '¡Compra finalizada con exito!',
             ticket,
             productsNotPurchase
         })
-        
 
     } catch (error) {
         req.logger.error('Error in purchaseCart ')

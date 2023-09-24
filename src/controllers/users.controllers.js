@@ -1,16 +1,16 @@
 
-import UserDB from "../data/dto/user.dto.js"
+import { UserDTO, UserListDTO } from "../data/dto/user.dto.js"
 //import jwt from "jsonwebtoken"
-import { findUserByEmail, findUserById, findUserByToken, findUserToUpdate, updateUser } from "../services/users.service.js"
+import { findAllUsers, findUserByEmail, findUserById, findUserByToken, findUserToUpdate, updateUser, deleteUsers } from "../services/users.service.js"
 import crypto from 'crypto'
 import { transporter } from "../helpers/nodemailer.js"
 import { hashData } from "../utils/bcrypt.js"
 import config from "../config/env.config.js"
 
-export const findUsers = async (req, res, next) => {
+export const findOneUser = async (req, res) => {
     try {
-        //const payload = new UserDB(req.user)
-        const payload = UserDB.getUserTokenFrom(req.user)
+        const payload = new UserDTO(req.user)
+        //const payload = UserDB.getUserTokenFrom(req.user)
 
         if(config.node_env === 'test'){
             if(payload){
@@ -28,9 +28,10 @@ export const findUsers = async (req, res, next) => {
 
     } catch (error) {
         res.status(500).send({status:"error"})
-        req.logger.error('error en findUsers')
+        req.logger.error('error in findOneUser')
     }
 }
+
 
 export const destroySession = async (req, res) => {
     try {
@@ -110,7 +111,7 @@ export const restorePass = async (req, res) => {
             subject:'Restablece tu contraseña',
             html: `<h2>¡Hola, ${email}!</h2> <p>Para reestablecer su contraseña, haga click <a href=${resetUrl}>aqui</a></p>`
         })
-        console.log(resetUrl)
+        //console.log(resetUrl)
         req.logger.info('Todo ok! revisa la casilla de correo')
         req.flash('success-msg', 'Revisa tu casilla de correo')
         res.redirect('/api/users/login')
@@ -125,10 +126,9 @@ export const validateToken = async (req, res) => {
     const tokenPass = req.params.tokenPass
     try {
         const user = await findUserByToken(tokenPass)
-        console.log(user)
         // agregar validacion si el user no existe
 
-        res.render('restorePass', {tokenPass, style: 'login.css'})
+        res.render('restorePass', {tokenPass})
 
     } catch (error) {
         req.logger.error('Error in validateToken')
@@ -208,7 +208,7 @@ export const uploads = async (req, res) => {
             await payload.save()
         }
         
-        res.redirect('/api/sessions/current')
+        res.redirect('/api/users/current')
         
     } catch (error) {
         req.logger.error('Error in uploads')
@@ -227,7 +227,6 @@ export const uploadProfile = async (req, res) => {
         const index = path.indexOf('/upload') !== -1 ? path.indexOf('/upload') : path.indexOf('\\upload')
         const newPath = path.substring(index)
         payload.imageProfile = newPath
-        console.log(payload)
         await payload.save()
         
         res.redirect('/api/sessions/current')
@@ -235,5 +234,54 @@ export const uploadProfile = async (req, res) => {
     } catch (error) {
         req.logger.error('Error in uploads')
         res.status(500).json({ error: error })
+    }
+}
+
+
+export const findUsers = async (req, res) => {
+    try {
+        const users = await findAllUsers()
+        const payload = new UserListDTO(users)
+
+        if(payload){
+            res.render('usersList', { payload })
+        }else {
+            res.redirect('/api/users/login')
+        }
+    } catch (error) {
+        res.status(500).send({status:"error"})
+        req.logger.error('error in findOneUser')
+    }
+}
+
+export const deleteDisconnectedUsers = async (req, res) => {
+    try {
+        const today = new Date()
+        const twoDaysAgo = new Date(today)
+        twoDaysAgo.setDate(today.getDate() - 2) // Retrocede 2 días desde hoy
+
+        const users = await findAllUsers()
+        const payload = new UserListDTO(users)
+
+        const disconnectedUsers = payload.users.filter((user) => {
+            const lastConnection = new Date(user.last_connection)
+            return lastConnection < twoDaysAgo
+        })
+
+        ('Usuarios que no han tenido conexión en los últimos 2 días:', disconnectedUsers)
+
+        if (disconnectedUsers.length >= 1) {
+            await deleteUsers(disconnectedUsers)
+            await transporter.sendMail({
+                to: disconnectedUsers.map((user) => user.email).join(', '),
+                subject: 'Usuario eliminado por inactividad',
+                html: `<p>Hola!. Te notificamos que tu cuenta registrada en <strong>Matesuli</strong> ha sido eliminada por inactividad.</p>`,
+            })
+        }
+
+        res.status(200).send('Todo OK')
+    } catch (error) {
+        console.error('Error al eliminar usuarios inactivos:', error)
+        res.status(500).json({ error: 'Error interno del servidor.' })
     }
 }

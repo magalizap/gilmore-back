@@ -45,22 +45,8 @@ export const deleteCart = async (cid) => {
 
 export const updateOne = async (cid, pid, quantity) => {
     try {
-        const cart = await cartManager.findOneById(cid)
-        const arrayProducts = cart.products
-        const findProd = arrayProducts.findIndex((prod) => prod.id_prod == pid)
-        arrayProducts[findProd].quantity = arrayProducts[findProd].quantity + quantity
-        const updateCart = await cartManager.updateOne({_id: cid}, {products: arrayProducts})
-        return updateCart
-    } catch (error) {
-        return error
-    }
-}
-
-export const updateCart = async () => {
-    try {
-        const cart = await cartManager.findOneById(cid)
-        cart.products = {products: [{id_prod: pid, quantity: quantity}]}
-        return cart
+        const updateQty = await cartManager.updateProduct(cid, pid, quantity)
+        return updateQty
     } catch (error) {
         return error
     }

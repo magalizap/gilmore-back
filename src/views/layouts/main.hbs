@@ -8,7 +8,9 @@
     <!-- Font Awesome js -->
     <script src="https://kit.fontawesome.com/cc89456e6d.js" crossorigin="anonymous"></script>
     <!-- My links css -->
+    {{#if style}}
     <link rel="stylesheet" href="/css/{{style}}">
+    {{/if}}
     <title>Matesuli</title>
 </head>
 <body>
@@ -24,6 +26,8 @@
     <!-- socket.io js-->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.7.1/socket.io.min.js" integrity="sha384-aLDVTBgAxTWlDizeP12DGB2aUiRNc+gmLk756oobTbxrudEyn0GKgUA5BvKbFnOy" crossorigin="anonymous"></script>
     <!-- My links js -->
+    {{#if script}}
     <script src="/js/{{script}}" type="module"></script>
+    {{/if}}
 </body>
 </html>

@@ -1,0 +1,23 @@
+
+<h1>Lista de Usuarios:</h1>
+{{#each payload.users}}
+    <div class="card card-body  mb-2">
+        <div class="d-flex justify-content-between">
+                <ul>
+                    <strong>Nombre:</strong> {{full_name}}<br>
+                    <strong>Correo:</strong> {{email}}<br>
+                    <strong>Rol:</strong> {{role}}<br>
+                    <strong>Última conexión:</strong> {{last_connection}}<br><br>              
+                </ul>                  
+        </div>
+    </div>
+{{/each}}
+
+
+<form action="/api/users?_method=DELETE" method="POST">
+    <input type="hidden" name="_method" value="DELETE">
+    <div class="card-body">
+        <p>¿Deseas eliminar a los usuarios que no hayan tenido conexión en los últimos 2 días?</p>
+        <button type="submit" class="btn btn-outline-secondary">Eliminar usuarios</button>
+    </div>
+</form>  

@@ -16,7 +16,7 @@ let saveId = ''
 const prodUI = (prod) => {
   const div = document.createElement('div')
   div.innerHTML = `
-  <div class="card card-body rounded-0 mb-2">
+  <div class="card card-body mb-2">
     <div class="d-flex justify-content-between">
       <h1 class="h3 card-title">${prod.title}</h1>
         <div>
