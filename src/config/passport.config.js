@@ -64,7 +64,7 @@ const initializePassport = async () => {
     passport.use('githubStrategy', new GithubStrategy({
         clientID: config.github_client_id,
         clientSecret: config.github_client_secret,
-        callbackURL: `http://${req.headers.host}/api/sessions/github`
+        callbackURL: `https://matesuli-back.onrender.com/api/sessions/github`
     }, async(accessToken, refreshToken, profile, done) => {
         const {name, email} = profile._json
         try {
