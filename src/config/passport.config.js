@@ -94,7 +94,7 @@ const initializePassport = async () => {
     passport.use('googleStrategy', new GoogleStrategy({
         clientID: config.google_client_id,
         clientSecret: config.google_client_secret,
-        callbackURL: "http://localhost:4000/api/sessions/google"
+        callbackURL: "https://matesuli-back.onrender.com/api/sessions/google"
     }, async(accessToken, refreshToken, profile, done) => {
         const {given_name, family_name, email} = profile._json
         try {
