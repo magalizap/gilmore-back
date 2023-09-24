@@ -5,7 +5,7 @@ import { dropCart } from "../setup.test.js";
 import { authenticateUser } from '../auth/testAuth.test.js'
 
 const PORT = config.port
-const requester = supertest(`http://localhost:${PORT}`)
+const requester = supertest(`https://matesuli-back.onrender.com:${PORT}`)
 
 describe('Test routes Cart', () => {
     before(async () => {
