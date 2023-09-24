@@ -86,6 +86,12 @@ app.use((req, res, next) => {
 const io = new Server(server, {cors: {origin: '*'}}) 
 sockets(io)
 
+// initialization
+app.get('/', async (req, res) => {
+    res.render('login')
+})
+
+
 // Routes
 app.use('/api/products', productRouter)
 app.use('/api/users', userRouter)
@@ -93,7 +99,6 @@ app.use('/', viewRouter)
 app.use('/api/sessions', sessionsRoutes)
 app.use('/api/cart', cartRouter)
 app.use('/api/docs', swaggerServe, swaggerSetup)
-
 
 
 // Logger
