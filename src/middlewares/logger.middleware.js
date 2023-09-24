@@ -32,12 +32,12 @@ const fileFormat = winston.format.combine(
 
 const transports = [
     new winston.transports.Console({
-        level: config.node_env === 'prod' ? 'info' : 'debug',
+        level: config.node_env === 'production' ? 'info' : 'debug',
         format: consoleFormat
     })
 ]
 
-if (config.node_env === 'prod') {
+if (config.node_env === 'production') {
     transports.push(
         new winston.transports.File({
             filename: __dirname + '/logs/error.log',
@@ -54,7 +54,7 @@ const logger = winston.createLogger({
 
 const addLogger = (req, res, next) => {
     req.logger = logger
-    const loggerLevel = config.node_env === 'prod' ? 'info' : 'debug'
+    const loggerLevel = config.node_env === 'production' ? 'info' : 'debug'
     req.logger.log(loggerLevel, `${req.method} at ${req.url} - ${new Date().toLocaleTimeString()}`)
     next()
 }

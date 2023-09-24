@@ -8,9 +8,9 @@
     "node": "18.17.0"
   },
   "scripts": {
-    "start": "node src/index.js -m prod",
-    "dev": "nodemon src/index.js -m dev",
-    "test": "mocha test/**/*.test.js -m test --file ./test/setup.test.js --timeout 5000"
+    "start": "node src/index.js -m production",
+    "dev": "nodemon src/index.js -m development",
+    "test": "mocha test/**/*.test.js -m testing --file ./test/setup.test.js --timeout 5000"
   },
   "keywords": [],
   "author": "",

@@ -27,10 +27,8 @@ import methodOverride from 'method-override'
 // Config
 export const app = express()
 const PORT = config.port || 8080
-const environment = config.node_env 
 const server = app.listen(PORT, () => {
     logger.info(`🚀 Server listening on port: ${PORT}`)
-    logger.info(`environment: ${environment}`)
 })
 
 // Handlebars
