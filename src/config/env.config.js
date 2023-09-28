@@ -18,7 +18,7 @@ const environment = program.opts().mode
 
 let envFilePath = ''
 
-if (environment === 'dev') {
+if (environment === 'development') {
   envFilePath = './.env.development'
 } else if (environment === 'test') {
   envFilePath = './.env.testing'

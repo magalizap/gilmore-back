@@ -2,7 +2,7 @@ import { ticketModel } from "../data/models/ticket.model.js";
 import { createOne, findOneById, updateOne} from "../services/carts.service.js";
 import { findById as findProductById} from "../services/products.service.js";
 import { v4 as uuidv4 } from 'uuid'; // genera un codigo random
-import { findUserByEmail } from "../services/users.service.js";
+import { transporter } from "../helpers/nodemailer.js";
 
 
 // creo el carrito de mi user
@@ -124,10 +124,8 @@ export const updateOneProduct = async (req, res) => {
 // finalizar compra
 export const purchaseCart = async (req, res) => {
     const cid = req.params.cid
-    //const {email} = req.body
-    
     const cart = await findOneById({_id: cid})
-    //const userEmail = await findUserByEmail(email)
+
     const productsToPurchase = []
     const productsNotPurchase = []
     
@@ -168,11 +166,20 @@ export const purchaseCart = async (req, res) => {
 
     try {
 
-        res.status(200).json({
+        /*res.status(200).json({
             message: '¡Compra finalizada con exito!',
             ticket,
             productsNotPurchase
+        })*/
+        await transporter.sendMail({
+            to: req.user.email,
+            subject: '!Tu pedido ya está en camino!',
+            html: `
+                <p>Órden de compra: #${ticket.code}</p>
+                <p>Pagaste: $${ticket.amount}</p>
+            `
         })
+        res.render('purchaseCart', ticket)
 
     } catch (error) {
         req.logger.error('Error in purchaseCart ')

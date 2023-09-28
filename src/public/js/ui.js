@@ -49,12 +49,13 @@ export const fillForm = (prod) => {
   stock.value = prod.stock,
   description.value = prod.description,
   thumbnail.value = prod.thumbnail
-
   saveId = prod._id
 }
 
 export const onHandleSubmit = (e) => {
     e.preventDefault()
+    /*
+    //opción con multer (NO IMPLEMENTADA)
     const file = thumbnail.files[0]
 
     if(file){
@@ -64,9 +65,9 @@ export const onHandleSubmit = (e) => {
         method: 'POST',
         body: formData
       })
-      .then((res) => res.text())
-
-    }
+      .then((res) => console.log(res.text()))
+      
+    }*/
 
     if(saveId){
       updateProduct(
@@ -86,6 +87,7 @@ export const onHandleSubmit = (e) => {
         stock.value,
         description.value,
         thumbnail.value
+        
       )
     }
     formProduct.reset()

@@ -1,28 +1,38 @@
+import { transporter } from "../helpers/nodemailer.js"
 import { create, findAll } from "../services/messages.service.js"
 import { createOne, deleteOne, findAll as findAllProducts, findById, updateOne} from "../services/products.service.js"
 import { v4 as uuidv4 } from 'uuid' // genera un codigo random
 
+
+
 let ownerEmail
-let image
-let users 
-
-export const upload = (url) => {
-    image = url
-}
-
-export const userPremium = (user) => {
-    ownerEmail = user
-}
+let users
+let userRole
+let errorMsg
 
 export const usersOnline = (userOn) => {
     users = userOn.first_name
 }
+export const userPremium = (email, user, err) => {
+    ownerEmail = email
+    userRole = user.role
+    errorMsg = err
+}
+
+//opción con multer (NO IMPLEMENTADA)
+/*
+let image
+export const upload = (url) => {
+    image = url
+    console.log(image) // devuelve la ruta deseada
+}*/
+
+
 
 export default (io) => {
 
     io.on('connection', async (socket) => {
         console.log('Client connected')
-        //const user = socket.request.session.user
 
         // C H A T 
 
@@ -30,6 +40,7 @@ export default (io) => {
             const messages = await findAll()
             socket.emit('server:loadMessages', messages)
         }
+
         messagesList() // envío mi arreglo de mensajes
 
         socket.on('client:sendMessage', async (data) => {
@@ -46,7 +57,7 @@ export default (io) => {
 
         const productsList = async () => {
             const products = await findAllProducts({ status: true },                   
-                { limit: 10, page: 1, sort: { price:  -1 }, lean: true }
+                { limit: 100, page: 1, sort: { price:  -1 }, lean: true }
             )
             //envío el listado de mis productos
             io.sockets.emit('server:loadProducts', products.docs)
@@ -55,12 +66,11 @@ export default (io) => {
         productsList() //envío mi arreglo de productos
 
         socket.on('client:newProduct', async (data) => {
-
             const newProduct = await createOne({
                 title: data.title, 
                 description: data.description,
                 price: data.price, 
-                thumbnail: image, 
+                thumbnail: data.thumbnail,
                 code: uuidv4(), 
                 owner: ownerEmail,
                 stock: data.stock, 
@@ -69,8 +79,26 @@ export default (io) => {
             io.sockets.emit('server:newProduct', newProduct) // envío los datos del nuevo producto creado
         })
 
-        socket.on('client:deleteProduct', async (pid) => { // elimino el producto seleccionado y actualizo el fronts
+        socket.on('client:deleteProduct', async (pid) => { // elimino el producto seleccionado y actualizo el front
+            const product = await findById(pid)
+
+            // si el usuario es premium y el producto no le pertenece no puede eliminarlo
+            if(userRole === 'Premium' && ownerEmail !== product.owner){
+                productsList()
+                return errorMsg
+            }
+
             await deleteOne(pid)
+            if(userRole === 'Admin' && product.owner !== 'Admin'){
+                await transporter.sendMail({
+                    to: product.owner,
+                    subject:'Uno de tus productos ha sido eliminado',
+                    html: `<p>¡Hola! Te notificamos que, tu producto con el nombre ${product.title} ha sido eliminado por el administrador del sitio. </p>`
+                })
+            }
+            
+            
+            
             productsList()
         })
 
@@ -80,12 +108,11 @@ export default (io) => {
         })
 
         socket.on('client:updateProduct', async (updateProd) => {
-
             await updateOne(updateProd._id, {
                 title: updateProd.title,
                 description: updateProd.description, 
                 price: updateProd.price, 
-                thumbnail: image,
+                thumbnail: updateProd.thumbnail,
                 code: uuidv4(), 
                 owner: ownerEmail,
                 category: updateProd.category, 

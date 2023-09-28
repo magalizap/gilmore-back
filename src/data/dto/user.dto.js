@@ -14,7 +14,8 @@ export class UserListDTO {
         full_name: `${user.first_name} ${user.last_name}`,
         email: user.email,
         role: user.role,
-        last_connection: user.last_connection
+        last_connection: user.last_connection,
+        _id: user._id
       }))
     }
   }

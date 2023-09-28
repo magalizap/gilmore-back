@@ -1,55 +1,69 @@
-<div class="centerCard">
-    <form id="formProduct"  class="form" enctype="multipart/form-data">
-        <p class='title'>AÑADIR NUEVO PRODUCTO:</p>
-        <section class="alinear">
-            <div class="item">
-                <label for="title">Nombre:</label>
-                <input type="text" id="title" class="inputProd">
+<div class="container">
+    <div class="card">
+        <div class="card-body">
+            <form id="formProduct" enctype="multipart/form-data">
+            <p class="text-center fw-bolder">AÑADIR NUEVO PRODUCTO:</p>
+
+            <div class="row">
+                <div class="col mb-3">
+                    <label for="title" class="form-label">Nombre:</label>
+                    <input type="text" class="form-control" id="title" required>
+                </div>     
+
+                <div class="col mb-3">
+                    <label for="stock" class="form-label">Stock disponible:</label>
+                    <input  type="number" id="stock" class="form-control" >
+                </div>
+            </div>
+            <div class="row">
+                <div class="col">
+                    <label for="price" class="form-label">Precio:</label>
+                    <div class="input-group mb-3">
+                        <span class="input-group-text">$</span>
+                        <input type="number" id="price" class="form-control" aria-label="Amount (to the nearest dollar)">
+                        <span class="input-group-text">.00</span>
+                    </div>                  
+                </div>
+                <div class="col">
+                    <label for="category" class="form-label">Categorías:</label>
+                    <div class="col input-group mb-3 ">
+                    <select class="form-select " id="category" required>
+                        <option selected>Set Matero</option>
+                            <option value="Reposeras Plegables">Reposeras Plegables</option>
+                            <option value="Bolsos Weekend">Bolsos Weekend</option>
+                            <option value="Set Matero">Totes</option>
+                    </select>
+                    </div>
+                </div>
             </div>
 
-            <div class="item">
-                <label for="category" >Categoría:</label>
-                <select id="category" required>
-                    <option value="1">1</option>
-                    <option value="2">2</option>
-                    <option value="3">3</option>
-                </select>
-            </div>
-        </section>
+            <label for="thumbnail" class="form-label">Imagen (url):</label>
+            <div class="input-group mb-3">
+            <span class="input-group-text">https://example.com/products/</span>
+            <input type="text" class="form-control" id="thumbnail" aria-describedby="basic-addon3">
+            </div>                
 
-        <section  class="alinear">
-            <div class="item">
-                <label for="price" >Precio:</label>
-                <input type="number" id="price" class="inputProd" >
-            </div>
-            <div class="item"> 
-                <label for="stock" >Stock disponible:</label>
-                <input type="number" id="stock" class="inputProd">
-            </div>
-        </section>
+            <div class="row">
+                <div class="col mb-3">
+                <label for="description" class="form-label">Descripción:</label>
+                <textarea class="form-control" id="description" rows="3"></textarea>
+                </div>
+                <div class="col d-flex justify-content-center align-items-center">
 
-        <section class="alinear">
 
-            <div class="item">
-                <label for="description" >Descripción:</label>
-                <input type="text" class="descrip" id="description">
+                <input class="btn btn-primary" style="background-color: #56AB91;" type="submit" value="CARGAR PRODUCTO">
+                </div>
             </div>
-            
-            <div class="item">
-                <label for="thumbnail" >Imagen:</label>
-                <input  type="file" id="thumbnail" class="inputProd" >
-            </div>
-        </section>
-        <input class="btn newSubmit" type="submit" value="CARGAR PRODUCTO">
-    </form>
+
+
+            </form>
+        </div>
+    </div>
 </div>
 
 
 
 
-
-
-
-<p class='title'>LISTA DE PRODUCTOS:</p>
+<p class="text-center fw-bolder mt-5" >LISTA DE PRODUCTOS:</p>
 <ul class="productList" id="products"></ul>
 

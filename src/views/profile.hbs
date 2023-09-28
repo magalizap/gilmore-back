@@ -36,6 +36,7 @@
         <div class="col-md-8 mt-5">
             <div class="card w-100 d-flex">
                 <div class="card-body">
+                    <h5>Cargar documentos:</h5>
                     <form action='/api/users/{{user._id}}/documents' method="post" enctype="multipart/form-data">
        			        <label for="formFileSm" class="form-label">Documento de indentificación:</label>
                         <div class="d-flex mb-2 gap-3">
@@ -61,18 +62,18 @@
             <div class="card mt-2">
                 <div class="card-body">
                 {{#if payload.documents}}
-                    <h5>Documentos Subidos:</h5>
+                <h5>Documentos Subidos:</h5>
+                <div class="d-grid gap-3">
 
-                    <ul>
-                        <div class="d-flex justify-content-between p-3 bg-light">
-                        {{#each payload.documents}}
-                            <i class="fa-solid fa-file-lines" style="color: #56ab91;"></i>
-                            <span>{{this.name}} • uploaded</span>
-                            <i class="fa-solid fa-check" style="color: #56ab91;"></i>
-                        {{/each}}
-                        </div>
-                    </ul>                        
-                
+                {{#each payload.documents}}
+                  <div class="p-2 bg-light border">
+                    <i class="fa-solid fa-file-lines" style="color: #56ab91;"></i>
+                    <span class="mx-3">{{this.name}} • uploaded</span>
+                    <i class="fa-solid fa-check" style="color: #56ab91;"></i>
+                  </div>
+                {{/each}}
+
+                </div>                       
                 {{else}}
                     <p>Los archivos se verán aqui</p>
                 {{/if}}

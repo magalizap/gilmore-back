@@ -1,8 +1,9 @@
 // Middleware de autenticación de usuarios
 
 export const isAuthenticated = (req, res, next) => {
-    if(!req.user) return res.status(401).redirect('/api/users/login'), req.logger.error('Debes iniciar sesión primero')
-        
+    if(!req.user) return req.flash('error-msg', 'Debes iniciar sesión primero'),
+    res.status(401).redirect('/api/users/login')
+    
     if (req.user.role === 'Admin') {
         res.locals.isAdmin = true
     } else if(req.user.role === 'Premium'){
@@ -14,20 +15,10 @@ export const isAuthenticated = (req, res, next) => {
     next()
 }
 
-export const authUser = (req, res, next) => {
-    if(!req.user) return res.status(401).redirect('/api/users/login'), req.logger.error('Debes iniciar sesión primero')
-    if(req.user.role === 'User') {
-        req.logger.info('tienes rol de usuario')
-        res.locals.isAdmin = false
-        next()
-    } else {
-        req.logger.error('solo el usuario tiene acceso a esta ruta')
-        return res.redirect('/api/products')
-    } 
-}
-
 export const authAdmin = (req, res, next) => {
-    if(!req.user) return res.status(401).redirect('/api/users/login'), req.logger.error('Debes iniciar sesión primero')
+    if(!req.user) return req.flash('error-msg', 'Debes iniciar sesión primero'), 
+    res.status(401).redirect('/api/users/login')
+
     if (req.user.role === 'Admin') {
         req.logger.info('tienes rol de administrador')
         res.locals.isAdmin = true
@@ -38,9 +29,33 @@ export const authAdmin = (req, res, next) => {
     }
 }
 
+export const authUserOrUserPremium = (req, res, next) => {
+    if(!req.user) return req.flash('error-msg', 'Debes iniciar sesión primero'), 
+    res.status(401).redirect('/api/users/login')
+
+    if(req.user.role === 'User') {
+        req.logger.info('tienes rol de usuario')
+        res.locals.isAdmin = false
+        next()
+    }else if(req.user.role === 'Premium') {
+        req.logger.info('tienes la cuenta premium')
+        res.locals.isAdmin = false
+        res.locals.isPremium = true
+        next()
+    }
+    else {
+        req.flash('error-msg', 'Solo el usuario tiene acceso a esta ruta')
+        req.logger.error('solo el usuario tiene acceso a esta ruta')
+        res.redirect('/api/products')
+    } 
+}
+
+
+
 export const authAdminOrUserPremium = (req, res, next) => {
 
-    if(!req.user) return res.status(401).redirect('/api/users/login'), req.logger.error('Debes iniciar sesión primero')
+    if(!req.user) return req.flash('error-msg', 'Debes iniciar sesión primero'), 
+    res.status(401).redirect('/api/users/login')
     if (req.user.role === 'Admin') {
         req.logger.info('tienes rol de administrador')
         res.locals.isAdmin = true

@@ -1,16 +1,20 @@
-
-<div class="alinearProductos">
-  {{#each products.docs}}
-  <div class="card "  style="width: 100%;">
-    <img src="/img/image.jpg" class="card-img-top" alt="img">
-    <div class="card-body">
-      <h5 class="card-title">{{this.title}}</h5>
-      <span>Stock disponible: {{this.stock}}</span>
-      <a href='/api/products/{{_id}}' class="btn btn-primary submit">Detalle del producto</a>
-    </div>
-  </div>
-  {{/each}}
+  <div class="alinearProductos">
+    {{#each products.docs}}
+      <div class="col-sm">
+        <div class="card">
+          <img src={{this.thumbnail}} class="img-thumbnail" alt="img">
+          <div class="card-body">
+            <h5 class="card-title">{{this.title}}</h5>
+            <span>Stock disponible: {{this.stock}}</span>
+            <a href='/api/products/{{_id}}' class="btn btn-primary mt-2 submit">Detalle del producto</a>
+          </div>
+        </div>        
+      </div>
+    {{/each}}
 </div>
+ 
+
+
 
 
 <nav aria-label="Page navigation example">
@@ -31,3 +35,24 @@
     </li>
   </ul>
 </nav>
+
+
+<!-- 
+<div class="container">
+  <div class="row row-cols-3">
+    {{#each products.docs}}
+      <div class="col-sm">
+        <div class="card">
+          <img src={{this.thumbnail}} alt="img">
+          <div class="card-body">
+            <h5 class="card-title">{{this.title}}</h5>
+            <span>Stock disponible: {{this.stock}}</span>
+            <a href='/api/products/{{_id}}' class="btn btn-primary submit">Detalle del producto</a>
+          </div>
+        </div>        
+      </div>
+    {{/each}}
+  </div>
+</div>
+
+-->

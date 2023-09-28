@@ -16,6 +16,13 @@
                 </div>
             </div>
         </div>
+        <div class="col-md-4 mt-5">
+            <form action="/api/cart/{{../cart._id}}/purchase" method="post">
+                <div class="card-body">
+                    <button type="submit" class="btn btn-outline-secondary">Finalizar compra</button>
+                </div>
+            </form>
+        </div>
         {{else}}
         <div class="card mx-auto">
             <div class="card-body">
@@ -24,13 +31,6 @@
             </div>
         </div>
         {{/each}}
-        <div class="col-md-4 mt-5">
-            <form action="/api/cart/{{cart._id}}/purchase" method="post">
-                <div class="card-body">
-                    <button type="submit" class="btn btn-outline-secondary">Finalizar compra</button>
-                </div>
-            </form>
-        </div>
     </div>
 </div>
 

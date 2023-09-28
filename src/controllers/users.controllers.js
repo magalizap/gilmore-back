@@ -181,10 +181,12 @@ export const changeRol = async (req, res) => {
             // Cambio a user premium
             await updateUser({ _id: uid }, { role: 'Premium' }, { new: true })
         }else {
-            return res.status(404).json({ message: 'No has llenado todos los campos' })
+            req.flash('error-msg', 'No has llenado todos los campos')
+            return res.status(404).redirect('/api/users')
+            //return res.status(404).json({ message: 'No has llenado todos los campos' })
         }
-
-        res.status(200).json({ message: 'Rol del usuario actualizado exitosamente'})
+        req.flash('success-msg', 'Rol del usuario actualizado exitosamente!')
+        res.status(200).redirect('/api/users')
 
     } catch (error) {
         req.logger.error('Error in changeRol')
@@ -260,28 +262,23 @@ export const deleteDisconnectedUsers = async (req, res) => {
         const twoDaysAgo = new Date(today)
         twoDaysAgo.setDate(today.getDate() - 2) // Retrocede 2 días desde hoy
 
-        const users = await findAllUsers()
-        const payload = new UserListDTO(users)
-
-        const disconnectedUsers = payload.users.filter((user) => {
-            const lastConnection = new Date(user.last_connection)
-            return lastConnection < twoDaysAgo
+        const disconnectedUsers = await deleteUsers({
+            last_connection: { $lt: twoDaysAgo }
         })
 
-        ('Usuarios que no han tenido conexión en los últimos 2 días:', disconnectedUsers)
+        req.logger.info('Usuarios eliminados por inactividad:', disconnectedUsers)
 
-        if (disconnectedUsers.length >= 1) {
-            await deleteUsers(disconnectedUsers)
+        if (disconnectedUsers.deletedCount >= 1) {
             await transporter.sendMail({
                 to: disconnectedUsers.map((user) => user.email).join(', '),
                 subject: 'Usuario eliminado por inactividad',
                 html: `<p>Hola!. Te notificamos que tu cuenta registrada en <strong>Matesuli</strong> ha sido eliminada por inactividad.</p>`,
             })
         }
-
-        res.status(200).send('Todo OK')
+        req.flash('success-msg', 'Usuarios eliminados correctamente')
+        res.status(200).redirect('/api/users')
     } catch (error) {
-        console.error('Error al eliminar usuarios inactivos:', error)
+        req.logger.error('Error al eliminar usuarios inactivos:', error) 
         res.status(500).json({ error: 'Error interno del servidor.' })
     }
 }
