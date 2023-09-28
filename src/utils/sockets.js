@@ -79,7 +79,7 @@ export default (io) => {
             io.sockets.emit('server:newProduct', newProduct) // envío los datos del nuevo producto creado
         })
 
-        socket.on('client:deleteProduct', async (pid) => { // elimino el producto seleccionado y actualizo el front
+        socket.on('client:deleteProduct', async (pid) => { //elimino el producto seleccionado y actualizo el front
             const product = await findById(pid)
 
             // si el usuario es premium y el producto no le pertenece no puede eliminarlo
