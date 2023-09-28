@@ -1,7 +1,7 @@
 // Middleware de autenticación de usuarios
 
 export const isAuthenticated = (req, res, next) => {
-    if(!req.user) return req.flash('error-msg', 'Debes iniciar sesión primero'),
+    if(!req.user) return req.logger.error('Debes iniciar sesión primero'),
     res.status(401).redirect('/api/users/login')
     
     if (req.user.role === 'Admin') {
@@ -16,7 +16,7 @@ export const isAuthenticated = (req, res, next) => {
 }
 
 export const authAdmin = (req, res, next) => {
-    if(!req.user) return req.flash('error-msg', 'Debes iniciar sesión primero'), 
+    if(!req.user) return req.logger.error('Debes iniciar sesión primero'),
     res.status(401).redirect('/api/users/login')
 
     if (req.user.role === 'Admin') {
@@ -30,7 +30,7 @@ export const authAdmin = (req, res, next) => {
 }
 
 export const authUserOrUserPremium = (req, res, next) => {
-    if(!req.user) return req.flash('error-msg', 'Debes iniciar sesión primero'), 
+    if(!req.user) return req.logger.error('Debes iniciar sesión primero'),
     res.status(401).redirect('/api/users/login')
 
     if(req.user.role === 'User') {
@@ -54,7 +54,7 @@ export const authUserOrUserPremium = (req, res, next) => {
 
 export const authAdminOrUserPremium = (req, res, next) => {
 
-    if(!req.user) return req.flash('error-msg', 'Debes iniciar sesión primero'), 
+    if(!req.user) return req.logger.error('Debes iniciar sesión primero'),
     res.status(401).redirect('/api/users/login')
     if (req.user.role === 'Admin') {
         req.logger.info('tienes rol de administrador')

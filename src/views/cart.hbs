@@ -1,5 +1,6 @@
 <div class="container">
     <div class="row">
+        {{#if cart.products}}
         {{#each cart.products}}
         <div class="col-md-6 mt-5">
             <div class="card mb-2">
@@ -16,13 +17,14 @@
                 </div>
             </div>
         </div>
+        {{/each}}
         <div class="col-md-4 mt-5">
-            <form action="/api/cart/{{../cart._id}}/purchase" method="post">
+            <form action="/api/cart/{{cart._id}}/purchase" method="post">
                 <div class="card-body">
                     <button type="submit" class="btn btn-outline-secondary">Finalizar compra</button>
                 </div>
             </form>
-        </div>
+        </div>   
         {{else}}
         <div class="card mx-auto">
             <div class="card-body">
@@ -30,11 +32,6 @@
                 <a href="/api/products" class="btn btn-success btn-block">Ver catálogo disponible</a>
             </div>
         </div>
-        {{/each}}
-    </div>
+        {{/if}}
+    </div> 
 </div>
-
-
-<!-- 
-
--->

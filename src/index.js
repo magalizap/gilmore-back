@@ -10,6 +10,7 @@ import productRouter from './routes/products.routes.js'
 import userRouter from './routes/users.routes.js'
 import sessionsRoutes from './routes/sessions.routes.js'
 import cartRouter from './routes/carts.routes.js'
+import paymentRouter from './routes/payment.routes.js'
 import { __dirname } from './utils/path.js'
 import addLogger from './middlewares/logger.middleware.js'
 import { engine } from 'express-handlebars'
@@ -22,6 +23,7 @@ import viewRouter from './routes/views.routes.js'
 import { logger } from './middlewares/logger.middleware.js'
 import flash from 'connect-flash'
 import methodOverride from 'method-override'
+
 
 
 // Config
@@ -98,6 +100,7 @@ app.use('/api/users', userRouter)
 app.use('/', viewRouter)
 app.use('/api/sessions', sessionsRoutes)
 app.use('/api/cart', cartRouter)
+app.use('/api/payments', paymentRouter)
 app.use('/api/docs', swaggerServe, swaggerSetup)
 
 

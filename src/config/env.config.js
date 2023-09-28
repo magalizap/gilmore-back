@@ -41,5 +41,6 @@ export default {
   mailing_user: process.env.MAILING_USER,
   mailing_service: process.env.MAILING_SERVICE,
   mailing_password: process.env.MAILING_PASSWORD,
-  node_env: process.env.NODE_ENV || 'prod'
+  node_env: process.env.NODE_ENV || 'prod',
+  stripe_secret_key: process.env.STRIPE_SECRET_KEY
 }
