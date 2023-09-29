@@ -102,14 +102,17 @@ const initializePassport = async () => {
             if(userDB){
                 return done(null, userDB)
             }
-            const user = {
+            const newUser = {
                 first_name: given_name,
                 last_name: family_name || '',
                 email,
                 password: ' '
             }
-            const newUserDB = await userModel.create(user)
-            done(null, newUserDB)
+            const saveUser = await userModel.create(newUser)
+            const cart = await cartModel.create({products:[]})
+            saveUser.idCart = cart._id
+            await saveUser.save()
+            done(null, saveUser)
         } catch (error) {
             done(null, error)
         }

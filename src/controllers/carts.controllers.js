@@ -1,8 +1,5 @@
-import { ticketModel } from "../data/models/ticket.model.js";
 import { createOne, findOneById, updateOne} from "../services/carts.service.js";
 import { findById as findProductById} from "../services/products.service.js";
-import { v4 as uuidv4 } from 'uuid'; // genera un codigo random
-import { transporter } from "../helpers/nodemailer.js";
 import { createSession } from "../services/payment.service.js";
 
 
