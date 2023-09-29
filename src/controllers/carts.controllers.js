@@ -166,7 +166,7 @@ export const purchaseCart = async (req, res) => {
             mode: 'payment',
             client_reference_id: cid,
             success_url: `http://${req.headers.host}/api/payments/success?session_id={CHECKOUT_SESSION_ID}`,
-            cancel_url: `http://${req.headers.host}/api/payments/cancel`
+            cancel_url: `http://${req.headers.host}/api/payments/cancel`,
         })
         console.log(payment.url)
         return res.redirect(payment.url)
