@@ -1,4 +1,4 @@
-import Stripe from "stripe";
+import Stripe from "stripe"
 import config from '../config/env.config.js'
 
 const stripe = new Stripe(config.stripe_secret_key)

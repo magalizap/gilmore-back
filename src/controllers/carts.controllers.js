@@ -168,7 +168,7 @@ export const purchaseCart = async (req, res) => {
             success_url: `http://${req.headers.host}/api/payments/success?session_id={CHECKOUT_SESSION_ID}`,
             cancel_url: `http://${req.headers.host}/api/payments/cancel`
         })
-
+        console.log(payment.url)
         return res.redirect(payment.url)
         
     } catch (error) {
