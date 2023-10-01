@@ -39,8 +39,6 @@ socket.on('server:loadMessages', (data) => {
 
 // Recibir un nuevo mensaje del servidor
 socket.on('server:newMessage', (data) => {
-
     addMessage(data.user, data.msg)
 })
-
 

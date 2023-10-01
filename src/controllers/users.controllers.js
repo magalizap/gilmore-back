@@ -12,7 +12,7 @@ export const findOneUser = async (req, res) => {
         const payload = new UserDTO(req.user)
         //const payload = UserDB.getUserTokenFrom(req.user)
 
-        if(config.node_env === 'test'){
+        if(config.node_env === 'testing'){
             if(payload){
                 res.status(200).send({payload})
             }else if(!payload){
@@ -55,7 +55,7 @@ export const signupUser = async (req, res) => {
         const {email} = req.body
         const user = await findUserByEmail(email)
         req.session.user = user
-        if(config.node_env === 'test'){
+        if(config.node_env === 'testing'){
             res.send({payload: user._id})
         }else {
             req.flash('success-msg', `Bienvenido/a ${user.first_name}!`)
@@ -75,7 +75,7 @@ export const loginUser = async (req, res) => {
         req.session.user = user
         user.last_connection = Date.now()
         user.save()
-        if(config.node_env === 'test'){
+        if(config.node_env === 'testing'){
             res.send({payload: user._id})
         }else {
             req.flash('success-msg', `Bienvenido/a ${user.first_name}!`)
@@ -231,7 +231,7 @@ export const uploadProfile = async (req, res) => {
         payload.imageProfile = newPath
         await payload.save()
         
-        res.redirect('/api/sessions/current')
+        res.redirect('/api/users/current')
         
     } catch (error) {
         req.logger.error('Error in uploads')

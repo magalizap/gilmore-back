@@ -8,15 +8,14 @@ import { v4 as uuidv4 } from 'uuid' // genera un codigo random
 let ownerEmail
 let users
 let userRole
-let errorMsg
+
 
 export const usersOnline = (userOn) => {
     users = userOn.first_name
 }
-export const userPremium = (email, user, err) => {
+export const userPremium = (email, user) => {
     ownerEmail = email
     userRole = user.role
-    errorMsg = err
 }
 
 //opción con multer (NO IMPLEMENTADA)
@@ -84,8 +83,7 @@ export default (io) => {
 
             // si el usuario es premium y el producto no le pertenece no puede eliminarlo
             if(userRole === 'Premium' && ownerEmail !== product.owner){
-                productsList()
-                return errorMsg
+                return productsList()
             }
 
             await deleteOne(pid)

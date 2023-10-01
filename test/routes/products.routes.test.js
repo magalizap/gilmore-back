@@ -15,23 +15,22 @@ describe('Test routes Products', () => {
     })
 
     const mockProduct = {
-        title: 'Sandalia Camelia',
-        description: 'Sandalia de ecocuero - base atideslizante',
-        price: 10990,
-        thumbnail: [],
+        title: 'Reposera Plegable Chilly Diseño Gris',
+        description: 'Chilly - Tranca Style Living',
+        price: 46400,
+        thumbnail: 'https://http2.mlstatic.com/D_NQ_NP_916799-MLA48862305822_012022-O.webp',
         code: 'h3U7vDxg1Y09R2w2ubtc',
         stock: 16,
         status: true,
-        category: 'calzado'
+        category: 'Reposeras Plegables'
     }
 
     it('[POST] /api/products creation successfully', async () => {
     
         const agent = await authenticateUser('Admin')
         const response = await agent.post('/api/products').send(mockProduct)
-        
         expect(response.statusCode).to.be.eql(200)
-        expect(response.body.product.title).to.be.eql('Sandalia Camelia')
+        expect(response.body.product.title).to.be.eql('Reposera Plegable Chilly Diseño Gris')
         expect(response.body.product.title)
 
     })
@@ -51,14 +50,14 @@ describe('Test routes Products', () => {
         const newProductId = responseCreate.body.product._id;
 
         const mockUpdateProduct = {
-            title: 'Sandalia Camelia',
-            description: 'Sandalia de ecocuero - base atideslizante',
-            price: 10990,
-            thumbnail: [],
+            title: 'Reposera Plegable Chilly Diseño Gris',
+            description: 'Chilly - Tranca Style Living',
+            price: 46400,
+            thumbnail: 'https://http2.mlstatic.com/D_NQ_NP_916799-MLA48862305822_012022-O.webp',
             code: 'h3U7vDxg1Y09R2w2ubtc',
-            stock: 5, // updated
+            stock: 9, // updated
             status: true,
-            category: 'calzado'
+            category: 'Reposeras Plegables'
         }
 
         const response = await agent.put(`/api/products/${newProductId}`).send(mockUpdateProduct)

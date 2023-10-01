@@ -20,7 +20,7 @@ let envFilePath = ''
 
 if (environment === 'development') {
   envFilePath = './.env.development'
-} else if (environment === 'test') {
+} else if (environment === 'testing') {
   envFilePath = './.env.testing'
 } else {
   envFilePath = './.env.production'

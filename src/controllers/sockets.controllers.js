@@ -1,6 +1,5 @@
 import { userPremium, usersOnline } from "../utils/sockets.js"
 
-
 export const messageChat = async(req, res) => {
     const user = req.user
     usersOnline(user)
@@ -10,11 +9,10 @@ export const messageChat = async(req, res) => {
 export const realtimeproducts = async (req, res) => {
     const user = req.user
     let ownerEmail
-    const errorMsg = req.flash('error-msg', 'No puedes eliminar un producto que no te pertenece')
     if (req.user.role === 'Premium'){
        ownerEmail = req.user.email 
     }
-    userPremium(ownerEmail, user, errorMsg)
+    userPremium(ownerEmail, user)
     res.render('realtimeproducts', {style: 'products.css', script: 'main.js'})
 }
 

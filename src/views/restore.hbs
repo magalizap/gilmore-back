@@ -1,8 +1,15 @@
-<div class="centerLogin">
-    <form action="/api/sessions/restore" method="post" class='form' >
-        <p class='title'>RESTABLECER CONTRASEÑA:</p>
-        <label>Email:</label>
-        <input class='inputLogin'  type='email' name="email" ></input>
-        <input class="btn btn-primary submit" type="submit" value="SIGUIENTE">
-    </form>
+<div class="d-flex align-items-center justify-content-center">
+<div class="card w-75 ">
+    <div class="card-body">
+    <form action="/api/sessions/restore" method="post" >
+        <p class="text-center fw-bolder">RESTABLECER CONTRASEÑA:</p>
+                <div class="mb-3">
+                    <label class="form-label">Correo electrónico</label>
+                    <input type="email" name="email" required class="form-control" aria-describedby="emailHelp">
+                </div>       
+
+        <input class="btn btn-primary w-100" style="background-color: #56AB91;" type="submit" value="SIGUIENTE">
+    </form>        
+    </div>
+</div>
 </div>

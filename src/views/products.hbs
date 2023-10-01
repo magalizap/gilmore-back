@@ -1,8 +1,9 @@
-  <div class="alinearProductos">
+
+<div class="row gy-3">
     {{#each products.docs}}
-      <div class="col-sm">
+      <div class="col-md-4">
         <div class="card">
-          <img src={{this.thumbnail}} class="img-thumbnail" alt="img">
+          <img src={{this.thumbnail}} class="card-img-top"   alt="img">
           <div class="card-body">
             <h5 class="card-title">{{this.title}}</h5>
             <span>Stock disponible: {{this.stock}}</span>
@@ -12,8 +13,6 @@
       </div>
     {{/each}}
 </div>
- 
-
 
 
 

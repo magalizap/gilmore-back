@@ -1,37 +1,37 @@
-<div class="container">
-    <div class="row">
-        {{#if cart.products}}
-        {{#each cart.products}}
-        <div class="col-md-6 mt-5">
-            <div class="card mb-2">
-                <div class="d-flex justify-content-evenly card-body">
-                    <h4 class="card-title">{{this.id_prod.title}}</h4>
-                    <p class="card-text">Precio: ${{this.id_prod.price}}</p>
-                    <p class="card-text">Cantidad: {{this.quantity}}</p>
-                    <form action="/api/cart/{{../cart._id}}/product/{{this.id_prod._id}}?_method=DELETE" method="POST">
-                        <input type="hidden" name="_method" value="DELETE">
-                        <button class="bg-transparent border-0" type="submit">
-                            <i class="fa-solid fa-trash" style="color: #56ab91;"></i>
-                        </button>
-                    </form>                    
-                </div>
-            </div>
+{{#if cart.products}}
+{{#each cart.products}}
+<table class="table table-hover">
+
+  <tbody>
+    <tr>
+      <th scope="row">{{this.id_prod.title}}</th>
+      <td>Precio: ${{this.id_prod.price}}</td>
+      <td>Cantidad: {{this.quantity}}</td>
+      <td>
+        <form action="/api/cart/{{../cart._id}}/product/{{this.id_prod._id}}?_method=DELETE" method="POST">
+        <input type="hidden" name="_method" value="DELETE">
+            <button class="bg-transparent border-0" type="submit">
+                <i class="fa-solid fa-trash" style="color: #56ab91;"></i>
+            </button>
+        </form>              
+      </td>
+    </tr>
+  </tbody>
+
+</table>
+  {{/each}}
+<div class="col-md-4 mt-5">
+    <form action="/api/cart/{{cart._id}}/purchase" method="post">
+        <div class="card-body">
+            <button type="submit" class="btn btn-outline-secondary">Finalizar compra</button>
         </div>
-        {{/each}}
-        <div class="col-md-4 mt-5">
-            <form action="/api/cart/{{cart._id}}/purchase" method="post">
-                <div class="card-body">
-                    <button type="submit" class="btn btn-outline-secondary">Finalizar compra</button>
-                </div>
-            </form>
-        </div>   
-        {{else}}
-        <div class="card mx-auto">
-            <div class="card-body">
-                <p class="lead">Carrito vacío. Aún no haz agregado productos.</p>
-                <a href="/api/products" class="btn btn-success btn-block">Ver catálogo disponible</a>
-            </div>
+    </form>
+</div>   
+{{else}}
+    <div class="card mx-auto">
+        <div class="card-body">
+            <p class="lead">Carrito vacío. Aún no haz agregado productos.</p>
+            <a href="/api/products" class="btn btn-primary" style="background-color: #56AB91;">Ver catálogo disponible</a>
         </div>
-        {{/if}}
-    </div> 
-</div>
+    </div>
+{{/if}}

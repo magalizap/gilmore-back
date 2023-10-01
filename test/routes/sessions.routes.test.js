@@ -96,15 +96,14 @@ describe('Test routes sessions', () => {
         expect(response.body.payload).not.to.be.ok
     })
 
-    it('[GET] /api/sessions/current session profile', async () => {
+    it('[GET] /api/users/current session profile', async () => {
         const agent = await authenticateUser('Admin')
-        const response = await agent.get('/api/sessions/current')
+        const response = await agent.get('/api/users/current')
 
         expect(response.statusCode).to.be.eql(200)
         expect(response.body.payload).to.be.ok
 
         const user = response.body.payload
-        //console.log(user)
         expect(user.email).to.be.eql('admin@test.com')
     })
 })

@@ -38,7 +38,9 @@ export const addProduct = async (req, res) => {
         const product = await findProductById(pid)
 
         if(req.user.role === 'Premium' && req.user.email === product.owner){
-            return res.status(400).json({message: 'No puedes agregar productos que ya te pertenecen a tu carrito'})
+            req.flash('error-msg', 'El producto seleccionado ya te pertenece')
+            return res.status(400).redirect('/api/products')
+            //return res.status(400).json({message: 'No puedes agregar productos que ya te pertenecen a tu carrito'})
         }
 
         const parsedQuantity = parseInt(quantity)
@@ -60,7 +62,6 @@ export const deleteOneProduct = async (req, res) => {
     const pid = req.params.pid
     try {
         const cart = await findOneById({_id: cid})
-        console.log(cart)
         cart.products = cart.products.filter((item) => item.id_prod._id.toString() !== pid)
         await cart.save()
         res.status(200).redirect(`/api/cart/${cid}`)
@@ -93,7 +94,6 @@ export const updateOneCart = async (req, res) => {
     const {quantity} = req.body
     try {
         const result = await updateOne(cid, pid, quantity)
-        console.log(result)
         if (result.modifiedCount === 0) {
             return res.status(404).json({ message: 'Producto no encontrado en el carrito.' })
         }
@@ -112,7 +112,6 @@ export const updateOneProduct = async (req, res) => {
     try {
         const cart = await findOneById({_id: cid})
         cart.products = {products: [{products}]}
-        //cart.products = {products: [{id_prod: pid, quantity: quantity}]}
         res.status(200).json({cart: cart})
     } catch (error) {
         req.logger.error('Error in updateOneProduct ')
@@ -166,9 +165,8 @@ export const purchaseCart = async (req, res) => {
             mode: 'payment',
             client_reference_id: cid,
             success_url: `http://${req.headers.host}/api/payments/success?session_id={CHECKOUT_SESSION_ID}`,
-            cancel_url: `http://${req.headers.host}/api/payments/cancel`,
+            cancel_url: `http://${req.headers.host}/api/cart/${cid}`,
         })
-        console.log(payment.url)
         return res.redirect(payment.url)
         
     } catch (error) {

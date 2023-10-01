@@ -1,6 +1,5 @@
 
 import { findAll, findById, createOne, updateOne, deleteOne } from "../services/products.service.js";
-import { v4 as uuidv4 } from 'uuid'; // genera un codigo random
 import CustomError from '../services/custom/customError.js'
 import EErrors from "../services/errors/enum.js";
 import { generateProductErrorInfo } from '../services/errors/info.js'
