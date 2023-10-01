@@ -202,7 +202,7 @@ export const uploads = async (req, res) => {
 
         for (const uploadedFile of req.files){
             const { originalname, path } = uploadedFile
-            const index = path.indexOf('/upload') !== -1 ? path.indexOf('/upload') : path.indexOf('\\upload');
+            const index = path.indexOf('/upload') !== -1 ? path.indexOf('/upload') : path.indexOf('\\upload')
             const newPath = path.substring(index)
 
             const saveDocs = { name: originalname, reference: newPath }
